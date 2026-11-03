@@ -110,9 +110,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <PerfGuard />
 
           <MusicProvider>
-            <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
-              <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
-                {!siteConfig.useGradient && <BackgroundSlider />}
+            {/* ⚠️ 背景层必须放在 #app-mount-root 之外。
+                #app-mount-root 上有 app-reveal 动画，即使收尾帧写的是 transform:none，
+                浏览器算出来的仍是单位矩阵 matrix(1,0,0,1,0,0) —— 而只要 transform 不是 none，
+                它就会成为 position:fixed 后代的「包含块」。结果是下面这个 inset-0 的固定层
+                被撑成整个文档高度（实测 1440×1984 而不是 1440×950），
+                横版背景图被 object-cover 按高度放大 1.8 倍再裁切，
+                看上去就成了「竖屏渲染 + 放大的局部」。 */}
+            <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+              {!siteConfig.useGradient && <BackgroundSlider />}
                 <div className="site-veil absolute inset-0 z-[-9] transition-colors duration-1000"></div>
 
                 {/* 渐变光晕：改用 transform 动画代替 background-position 动画。
@@ -139,8 +145,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <div className="hidden md:block absolute inset-0 w-full h-full">
                   <BackgroundEffects />
                 </div>
-              </div>
+            </div>
 
+            <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
               {/* 隐藏手机端弹幕 */}
               <div className="hidden md:block">
                 <DanmakuBackground />
