@@ -14,6 +14,7 @@ import SplashScreen from "../components/SplashScreen";
 import CyberCat from '../components/CyberCat';
 import DanmakuBackground from '../components/DanmakuBackground';
 import Analytics from '../components/Analytics';
+import PerfGuard from '../components/PerfGuard';
 
 import MobileBackButton from '../components/MobileBackButton';
 
@@ -106,20 +107,29 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
           <SplashScreen />
 
+          <PerfGuard />
+
           <MusicProvider>
             <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
               <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
                 {!siteConfig.useGradient && <BackgroundSlider />}
                 <div className="site-veil absolute inset-0 z-[-9] transition-colors duration-1000"></div>
 
-                <div
-                  className="absolute inset-0 z-[-8] opacity-[0.12] dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu"
-                  style={{
-                    background: `linear-gradient(-45deg, ${siteConfig.themeColors.join(', ')})`,
-                    backgroundSize: '400% 400%',
-                    animation: 'gradientMove 15s ease infinite' // 🌟 全端保留渐变流动
-                  }}
-                ></div>
+                {/* 渐变光晕：改用 transform 动画代替 background-position 动画。
+                    background-position 每帧都要重绘整个全屏图层；transform 交给合成器，
+                    主线程几乎零开销。同时去掉 mix-blend-color —— 它会让整屏参与混合计算，
+                    是滚动掉帧的另一个大头。 */}
+                <div className="absolute inset-0 z-[-8] overflow-hidden opacity-[0.10] dark:opacity-20 transition-opacity duration-1000 pointer-events-none">
+                  <div
+                    className="absolute -inset-[30%]"
+                    style={{
+                      backgroundImage: `linear-gradient(-45deg, ${siteConfig.themeColors.join(', ')})`,
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientDrift 26s ease-in-out infinite alternate',
+                      willChange: 'transform',
+                    }}
+                  ></div>
+                </div>
 
                 {/* 👇 🌟 优化：手机端去掉了 mix-blend-overlay，但保留了 blur 模糊光晕，确保视觉不打折 */}
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"></div>
@@ -159,15 +169,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </div>
 
             <style suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `
-              @keyframes gradientMove { 
-                0% { background-position: 0% 50%; } 
-                50% { background-position: 100% 50%; } 
-                100% { background-position: 0% 50%; } 
+              @keyframes gradientDrift {
+                from { transform: translate3d(-5%, -3%, 0) rotate(0deg) scale(1.15); }
+                to   { transform: translate3d(5%, 3%, 0) rotate(2.5deg) scale(1.28); }
               }
             `}} />
           </MusicProvider>
 
-          <div className="hidden md:block">
+          {/* 猫娘是 fixed 定位的浮层，768–1023 这段宽度会压住正文卡片，
+              因此只在 lg 以上显示。 */}
+          <div className="hidden lg:block">
             <CyberCat />
           </div>
 

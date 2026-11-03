@@ -29,14 +29,38 @@
 ### 三种部署方式任选其一
 
 **① Vercel（最省事，推荐）**
+
 在 Vercel 项目 → Settings → Environment Variables 添加：
 
 ```
 AMAP_KEY = 9d048022fa962f81a61c7975abea88d0
 ```
 
-Root Directory 留空、Node 22、Install `corepack enable && pnpm install --frozen-lockfile`、Build `pnpm build`。
+项目设置（**全部保持默认，不要覆写**）：
+
+| 项 | 值 | 说明 |
+| --- | --- | --- |
+| Root Directory | **留空** | 填子目录会导致找不到 `package.json` |
+| Framework Preset | Next.js（自动识别） | `vercel.json` 已声明 `framework: nextjs` |
+| Build Command | `pnpm build` | 仓库已内置 |
+| **Install Command** | **留空** | ⚠️ 详见下方说明，覆写反而会装错 pnpm 版本 |
+| Node.js Version | 22 | `engines` 已声明 `>=20.9.0` |
+
+> ⚠️ **Install Command 必须留空**。Vercel 会依据 `pnpm-lock.yaml` 自动识别包管理器并执行 `pnpm install`；
+> 一旦你覆写 `installCommand`，Vercel 会改用**构建容器里最老的那个 pnpm（v6）**，读不了 `lockfileVersion: 9.0`。
+> 早期版本里写的 `corepack enable && pnpm install --frozen-lockfile` 还会因为 npm 签名密钥轮换直接崩
+> （`Cannot find matching keyid`），依赖装不上 → Next.js 检测不到 → 报「没有检测到 JS 版本」。
+
 部署后 `https://<你的域名>/api/weather` 即可用。
+
+**Vercel 部署报错速查**
+
+| 报错 | 原因 | 处理 |
+| --- | --- | --- |
+| `无效的要求：不应该有其他属性 'installers'` | `vercel.json` 含非法字段（官方 schema 为 `additionalProperties: false`） | 已修复：移除 `installers` |
+| `没有检测到 JS 版本 / 请确保您的包有 'next'` | 依赖没装上（Install Command 或 Root Directory 有误） | Install Command 留空 + Root Directory 留空 |
+| `The Edge runtime is deprecated and cannot be used` | 路由声明了 `runtime = 'edge'` | 已修复：全部改为 `'nodejs'` |
+| `ENOENT: readlink out/404.html` | `out/`（Pages 产物）被文件追踪收录又被 `.vercelignore` 排除 | 已修复：`outputFileTracingExcludes` + 部署前清理 `out/` |
 
 **② Cloudflare Worker（静态托管专用，边缘更快）**
 1. Workers & Pages → Create Worker → 粘贴 `workers/amap-weather.js` → Deploy
@@ -55,13 +79,19 @@ Root Directory 留空、Node 22、Install `corepack enable && pnpm install --fro
 
 | 能力 | 实现 |
 | --- | --- |
-| 网络定位显示当地天气 | `navigator.geolocation` → 服务端调高德逆地理编码（`geocode/regeo`）→ 取 adcode → 查天气；定位被拒时依次退回 IP 定位 → 默认城市 |
-| 加载骨架屏 | 首屏渲染骨架块（当前天气卡 / 生活指数 / 预报列表三段式），不再是一块空白 |
+| 网络定位显示当地天气 | `navigator.geolocation` → 服务端调高德逆地理编码（`geocode/regeo`）→ 取 adcode → 查天气；失败时按「拒绝授权 / 超时 / 设备不可用 / 非 HTTPS」给出**不同**提示，再依次退回 IP 定位 → 记忆城市 → 默认城市 |
+| 定位失败可解释 | 打开面板即显示具体原因（权限被拒 / 超时 / 非安全上下文），不再是静默失败 |
+| IP 定位 | 服务端把**访客真实 IP**（`x-forwarded-for` 等）传给高德 `v3/ip`；缓存按 IP 分桶，响应强制 `private, no-store` |
+| 新增地点 | 搜索框可搜**任意城市/区县**（服务端 `action=search` → 高德地理编码），一键「＋ 添加」进「我的地点」，存 `localStorage`，可单个删除 |
+| 加载骨架屏 | 首屏渲染骨架块（当前天气卡 / 生活指数 / 趋势图三段式），不再是一块空白 |
 | 错误兜底 | 网络失败 / 城市不存在 / 429 限流 / 配额耗尽 / Key 未配置，各自有独立中文提示与对应操作按钮 |
-| 请求防抖 | 城市搜索 260ms、切换城市 350ms；同城市在途请求直接复用，不重复打 API |
+| 请求防抖 | 地点搜索 320ms、切换城市 320ms；同城市在途请求直接复用，不重复打 API |
 | 本地缓存 | `localStorage` 缓存 8 分钟 + 服务端 TTL 缓存 8 分钟 + CDN `stale-while-revalidate` |
 | 城市记忆 | `localStorage` 记住上次查询城市，下次进页自动加载 |
 | 生活指数 | 穿衣 / 紫外线 / 洗车 / 运动 / 感冒 / 晨练 六项，按实况推算（`lib/life-index.ts`，前后端共用） |
+| 温度趋势折线图 | 纯 SVG（零依赖，不加 JS 包），高低温双曲线 + 渐变面积 + 触摸/悬停查看单日详情 |
+| 页头标识 | 左上角「气象站 / WEATHER STATION」大字标识 |
+| 数据来源 | 页面底部标注数据来源、更新频率、缓存时长、最近更新时间与免责声明 |
 | 天气动画 | 晴（光晕脉动）/ 多云（云层漂移）/ 雨（雨滴下落）/ 雪（雪花飘落）/ 雾，随天气切换；尊重 `prefers-reduced-motion` |
 | 预报 | 高德 `extensions=all` 返回未来 4 天，含白天/夜间天气、风向风力、最高/最低温 |
 
@@ -272,4 +302,52 @@ python3 verify_live.py  [BASE]  # 线上/本地全功能验收（21 项）
 - `verify_live.py`：**21 项功能检查全绿**（天气页 6 项 / 首页 4 项 / 相册 3 项 / 文章页 4 项 / 状态页 1 项 / RSS 1 项 / 移动端 1 项），无 JS 运行时错误
 - `verify_nojs.py`：**9 项全绿**，其中「禁用 JS 后首页 / 天气页内容仍完整可见可读」是本轮重点
 - 6 种分辨率 × 6 个页面横向溢出均为 **0px**
+
+---
+
+## 九、本轮改版：性能治理 + 天气页重构
+
+### 1. 卡顿根因与修复
+
+卡顿不是单一原因，而是几处「每帧都在白烧算力」的写法叠在一起：
+
+| 问题 | 位置 | 为什么卡 | 处理 |
+| --- | --- | --- | --- |
+| `will-change: backdrop-filter` 全量下发（且重复声明两次） | `globals.css` | 每张玻璃卡片常驻独立合成层，背景一动，十几层每帧重新模糊 | 整段删除，交回浏览器按需提升 |
+| 全屏渐变用 `background-position` 动画 + `mix-blend-color` | `layout.tsx` | `background-position` 每帧重绘整屏；混合模式让全屏参与混合运算 | 改为 `transform` 位移（合成器完成），去掉混合模式 |
+| 点击涟漪 `requestAnimationFrame` 无条件自循环 | `ClickEffect.tsx` | 没有任何涟漪时仍每帧 `clearRect` 全屏 canvas，且带 `shadowBlur` | 有涟漪才启动，清空即停；隐藏标签页停止 |
+| 导航栏滚动处理写入 state 并进依赖数组 | `Navbar.tsx` | 每次滚动都「卸载+重装监听器」并触发 React 重渲染 | 改 `ref` + `requestAnimationFrame` 节流 + 8px 抖动过滤 |
+| 萤火虫 + 樱花**同时挂载**，靠 `opacity:0` 隐藏 | `BackgroundEffects.tsx` | `opacity:0` 不会让 CSS 动画停下，等于白跑 90 个动画 | 按主题只渲染一组 |
+| 装饰元素数量过多 | `WindyGrass` / `Fireflies` / `Sakura` / `DanmakuBackground` | 草 150 + 萤火 50 + 樱花 40 + 弹幕 15，合计 300+ 常驻动画 | 72 / 20 / 16 / 10 |
+| 弹幕动画 `right` 属性 | `DanmakuBackground.tsx` | 布局属性动画每帧触发 layout | 改为纯 `transform: translateX` |
+| 毛玻璃卡片过多、半径 24px | 天气页 | 小卡片也在做全层模糊 | 新增 `.wx-card`（桌面 10px）/`.wx-card-flat`（无模糊），移动端直接关闭 `backdrop-filter` |
+
+实测：**CSS 常驻动画 313 → 106（-66%）**，桌面毛玻璃层 **17 → 11**，`will-change: backdrop-filter` 归零，滚动期间**长任务 0 个**（>50ms 的主线程阻塞为 0），控制台 0 报错。
+
+另外新增 `components/PerfGuard.tsx`：标签页不可见时给 `<html>` 打 `data-tab-hidden`，CSS 统一 `animation-play-state: paused`，切回来不再掉帧。
+
+### 2. 背景图朝向
+
+5 张素材原始文件是「竖版画布 + 侧躺的横屏内容」。用 EXIF 方向校正 + 旋转后重新编码为 **1920×1080 横版**（质量 78，合计 828KB），CSS 侧不再需要任何旋转 hack，`object-cover` 直接铺满。
+
+> 备注：按内容正确朝向验证过两个方向，顺时针 90° 会让人物倒立，因此实际采用的是「使画面正立」的旋转方向。
+
+### 3. 天气页新增
+
+- **左上角「气象站」**：68px 大字 + `WEATHER STATION` 字距副标 + 三段渐弱装饰线
+- **温度趋势折线图**：`components/WeatherTrendChart.tsx`，纯 SVG + Catmull-Rom 平滑，无第三方图表库（省 80–150KB JS）；支持悬停/触摸查看单日详情
+- **数据来源标注**：底部固定区块，含数据源链接、更新频率、缓存时长、最近更新时间、免责声明
+- **新增地点**：搜索任意城市/区县 → 加入「我的地点」→ 可删除，全部存本地
+
+### 4. 定位与接口修复
+
+| 问题 | 原因 | 修复 |
+| --- | --- | --- |
+| 永远定位失败 | 服务端调高德 IP 定位时没传 ip，高德用的是**服务器出口 IP**（机房 IP） | 从 `x-forwarded-for` / `x-real-ip` / `cf-connecting-ip` 取访客真实 IP 传入 |
+| 定位结果串号 | 服务端用固定 key `ip:me` 缓存，第一个访客的结果会发给所有人 | 缓存按 `ip:<addr>` 分桶 |
+| 定位结果被 CDN 缓存 | 默认响应头是 `public, s-maxage=480` | IP 定位响应强制 `private, no-store` |
+| 控制台 `404` 报错 | 「查不到」返回 404，被浏览器/监控记为资源失败 | 改为 `200 + ok:false`（业务空结果） |
+| 无法新增地点 | 只能从 72 个内置城市里选 | 新增 `action=search`，走高德地理编码，任意城市/区县可搜可加 |
+| 定位原因不透明 | 统一吞掉成「定位失败」 | 区分拒绝授权 / 超时 / 设备不可用 / 非 HTTPS，逐条给出可操作提示 |
+
 

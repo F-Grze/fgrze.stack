@@ -75,14 +75,17 @@ html.dark {
   filter: saturate(0.92) brightness(1.04) contrast(0.97);
 }
 
-/* 背景人物：右侧贴边、左侧柔性融入纸面 */
+/* 背景人物：右侧贴边、左侧柔性融入纸面
+   注意：这里只保留「一层」滤镜。blur + saturate + brightness 串起来会成倍
+   增加全屏图层的绘制成本，而 site-veil 已经负责压亮，saturate 收益很小。 */
 .bg-art {
-  filter: blur(3px) saturate(0.92) brightness(1.05);
+  filter: blur(2px) saturate(0.95);
   transform-origin: 60% 60%;
 }
 
 @media (max-width: 767px) {
-  .bg-art { filter: blur(4px) saturate(0.9) brightness(1.04); }
+  /* 移动端视口小、像素少，模糊成本低，保留稍强的柔化保证文字可读 */
+  .bg-art { filter: blur(2.5px) saturate(0.95); }
 }
 
 @keyframes kenburns {
@@ -126,9 +129,10 @@ html.dark .site-veil {
     --tw-prose-links: var(--color-indigo-400);
   }
 
-  [class*="backdrop-blur-"] {
-    will-change: backdrop-filter;
-  }
+  /* 注意：不要给所有 backdrop-blur 元素加 will-change。
+     will-change 会让每个元素常驻一个独立合成层，页面上十几张玻璃卡片就意味
+     十几层显存；而背景还在动，浏览器每帧都要对这些层重新做模糊 —— 这是本站
+     最大的掉帧来源。让浏览器自己按需提升即可。 */
 
   /* 仅在不支持标准 backdrop-filter 的老 Safari 上做兜底，避免覆盖各组件自己的模糊半径 */
   @supports not (backdrop-filter: blur(1px)) {
@@ -154,10 +158,6 @@ input[type=range]::-webkit-slider-thumb {
 
 /* 4. 火狐专项优化与布局兜底 */
 @layer base {
-  [class*="backdrop-blur-"] {
-    will-change: backdrop-filter;
-  }
-
   @-moz-document url-prefix() {
     [class*="backdrop-blur-md"] {
       backdrop-filter: blur(8px) !important;
@@ -528,7 +528,7 @@ html.dark .article-body code:not(pre code) {
    ======================================================== */
 html.dark body::after { opacity: 0.02; }
 
-html.dark [style*="gradientMove"] {
+html.dark [style*="gradientDrift"] {
   animation-duration: 32s !important;
 }
 
@@ -559,3 +559,64 @@ html.splash-skip .splash-veil,
 html.splash-skip [data-splash-veil] {
   display: none !important;
 }
+
+/* ========================================================
+   17. 运行期性能护栏
+   ======================================================== */
+
+/* 17.1 标签页不可见时，暂停所有 CSS 动画。
+   浏览器虽然会降频，但 background-position / backdrop-filter 这类动画
+   仍在走样式重算；切回标签页时积累的帧还会造成明显卡顿。
+   由 components/PerfGuard.tsx 维护 data-tab-hidden 属性。 */
+html[data-tab-hidden='true'] *,
+html[data-tab-hidden='true'] *::before,
+html[data-tab-hidden='true'] *::after {
+  animation-play-state: paused !important;
+}
+
+/* 17.2 天气页玻璃卡片
+   - 移动端直接不用 backdrop-filter（低端 GPU 上这是最贵的一项），
+     改用足够不透明的实色，肉眼几乎无差别；
+   - 桌面端把模糊半径从 24px 收到 10px，视觉接近、成本减半。 */
+.wx-card {
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 40px rgba(120, 86, 54, 0.08);
+}
+html.dark .wx-card {
+  background-color: rgba(30, 41, 59, 0.88);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+@media (min-width: 768px) {
+  .wx-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  html.dark .wx-card {
+    background-color: rgba(30, 41, 59, 0.62);
+  }
+}
+
+/* 17.2b 小面积卡片：不需要玻璃模糊。
+   每多一层 backdrop-filter，浏览器每帧就要多做一次全层模糊；
+   生活指数这类小卡片用实色几乎没有视觉差别，却能省下 6 层模糊。 */
+.wx-card-flat {
+  background-color: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 20px rgba(120, 86, 54, 0.06);
+}
+html.dark .wx-card-flat {
+  background-color: rgba(30, 41, 59, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 17.3 系统开启「减少动态效果」时，停掉装饰性动画 */
+@media (prefers-reduced-motion: reduce) {
+  .bg-art,
+  .wx-icon,
+  .wx-scene > * {
+    animation: none !important;
+  }
+}
+

@@ -244,9 +244,17 @@ export async function fetchAmapRegeo(lng: number, lat: number): Promise<AmapRege
   };
 }
 
-/** IP 定位（浏览器拒绝定位时的兜底，仅对国内 IP 有效） */
-export async function fetchAmapIpLocation(): Promise<AmapRegeoResult | null> {
-  const json = await amapFetch<any>('ip', {});
+/** IP 定位（浏览器拒绝定位时的兜底）
+ *
+ * 关键点：必须把「访客的真实 IP」传给高德。
+ * 不传 ip 参数时，高德取的是「请求发起方的 IP」，也就是 Vercel / Node 服务器
+ * 的出口 IP（机房 IP），拿到的基本都是空 adcode —— 表现就是永远定位失败。
+ */
+export async function fetchAmapIpLocation(clientIp?: string): Promise<AmapRegeoResult | null> {
+  const params: Record<string, string> = {};
+  if (clientIp && isPublicIp(clientIp)) params.ip = clientIp;
+
+  const json = await amapFetch<any>('ip', params);
   const adcode = Array.isArray(json.adcode) ? '' : String(json.adcode || '');
   if (!adcode) return null;
   const city = Array.isArray(json.city) ? '' : json.city;
@@ -257,11 +265,85 @@ export async function fetchAmapIpLocation(): Promise<AmapRegeoResult | null> {
     province,
     district: '',
     township: '',
-    formattedAddress: `${province}${city}`,
+    formattedAddress: `${province || ''}${city || ''}`,
     lng: 0,
     lat: 0,
   };
 }
+
+/** 判断是否为公网 IP（内网 / 回环地址传给高德会被拒绝） */
+export function isPublicIp(ip: string): boolean {
+  const v = (ip || '').trim();
+  if (!v) return false;
+  if (v.includes(':')) return false; // 高德 IP 定位只支持 IPv4
+  const m = v.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (!m) return false;
+  const [a, b] = [Number(m[1]), Number(m[2])];
+  if (a === 10 || a === 127 || a === 0) return false;
+  if (a === 172 && b >= 16 && b <= 31) return false;
+  if (a === 192 && b === 168) return false;
+  if (a === 169 && b === 254) return false;
+  if (a === 100 && b >= 64 && b <= 127) return false; // 运营商级 NAT
+  return true;
+}
+
+/* ------------------------------------------------------------------ */
+/* 地点搜索（支持任意城市 / 区县，用于「新增地点」）                    */
+/* ------------------------------------------------------------------ */
+
+export interface AmapPlace {
+  adcode: string;
+  name: string;
+  province: string;
+  district: string;
+  /** 高德返回的完整地址，用于区分同名地点 */
+  address: string;
+  lng?: number;
+  lat?: number;
+}
+
+/** 关键词 → 行政区划列表（高德地理编码） */
+export async function searchAmapPlaces(keyword: string): Promise<AmapPlace[]> {
+  const q = keyword.trim();
+  if (!q) return [];
+
+  const json = await amapFetch<any>('geocode/geo', { address: q });
+  const list: any[] = Array.isArray(json.geocodes) ? json.geocodes : [];
+
+  const out: AmapPlace[] = [];
+  const seen = new Set<string>();
+
+  for (const g of list) {
+    const adcode = Array.isArray(g?.adcode) ? '' : String(g?.adcode || '');
+    if (!adcode || seen.has(adcode)) continue;
+    seen.add(adcode);
+
+    // 直辖市返回的 city 可能是空数组，需要逐级兜底
+    const pick = (v: unknown) => (Array.isArray(v) ? '' : typeof v === 'string' ? v : '');
+    const province = pick(g?.province);
+    const city = pick(g?.city);
+    const district = pick(g?.district);
+
+    const [lngStr, latStr] = String(g?.location || '').split(',');
+    const lng = Number(lngStr);
+    const lat = Number(latStr);
+
+    out.push({
+      adcode,
+      name: city || district || province || q,
+      province,
+      district,
+      address: pick(g?.formatted_address) || `${province}${city}${district}`,
+      ...(Number.isFinite(lng) ? { lng } : {}),
+      ...(Number.isFinite(lat) ? { lat } : {}),
+    });
+
+    if (out.length >= 10) break;
+  }
+
+  return out;
+}
+
 
 /* ------------------------------------------------------------------ */
 /* 城市表（与客户端共用，单独成模块避免把服务端逻辑打进前端 bundle）    */

@@ -19,7 +19,9 @@ export default function Fireflies() {
   const [flies, setFlies] = useState<Firefly[]>([]);
 
   useEffect(() => {
-    const generated: Firefly[] = Array.from({ length: 50 }).map((_, i) => ({
+    // 每只萤火虫要跑「飞行 + 呼吸」两个动画，50 只就是 100 个动画；
+    // 20 只在观感上依然是稀疏的萤火群，成本降到原来的 40%。
+    const generated: Firefly[] = Array.from({ length: 20 }).map((_, i) => ({
       id: i,
       // 初始出生点
       top: `${Math.random() * 100}%`,

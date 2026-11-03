@@ -19,7 +19,8 @@ export default function DanmakuBackground() {
     if (list.length === 0) return;
 
     const generatedDanmakus: DanmakuItem[] = [];
-    const count = 15;
+    // 15 → 10：每条弹幕都是独立动画，10 条已经足够营造氛围
+    const count = 10;
 
     for (let i = 0; i < count; i++) {
       generatedDanmakus.push({
@@ -45,7 +46,7 @@ export default function DanmakuBackground() {
           className="absolute whitespace-nowrap text-white/30 dark:text-white/10 font-bold text-lg tracking-wider select-none"
           style={{
             top: `${item.top}%`,
-            right: '-100%',
+            left: 0,
             animation: `float-left ${item.duration}s linear ${item.delay}s infinite`,
           }}
         >
@@ -55,15 +56,11 @@ export default function DanmakuBackground() {
 
       <style dangerouslySetInnerHTML={{
         __html: `
+        /* 只用 transform 位移：原来同时动画 right（布局属性）和 transform，
+           每一帧都会触发整棵子树的 layout，是滚动卡顿的隐形来源。 */
         @keyframes float-left {
-          0% {
-            right: -100%;
-            transform: translateX(100%);
-          }
-          100% {
-            right: 100%;
-            transform: translateX(-100%);
-          }
+          0%   { transform: translateX(-110%); }
+          100% { transform: translateX(105vw); }
         }
       `}} />
     </div>

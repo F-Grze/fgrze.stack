@@ -88,6 +88,13 @@ if [ $BUILD_CODE -ne 0 ]; then
   exit $BUILD_CODE
 fi
 
+# 3.5 清理静态构建残留的 .next
+# 这一份 .next 是用 next.config.static.ts（output:"export"）生成的，
+# 留着会让后续的普通 next build（Vercel 服务端部署用）复用错误的缓存，
+# 报 "module-not-found: noto_serif_sc_*.module.css"。
+# 静态导出的真正交付物是 out/，删掉 .next 不影响任何东西。
+rm -rf .next
+
 # 4. 子路径部署：给手写的绝对资源路径补前缀（Next 只处理 /_next 与路由）
 if [ -n "$BASE_PATH" ] && [ "$NO_REWRITE" -eq 0 ]; then
   node scripts/rewrite-assets.mjs "$BASE_PATH"

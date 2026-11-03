@@ -17,7 +17,9 @@ export default function BackgroundSlider() {
   useEffect(() => {
     if (images.length <= 1) return;
 
+    // 标签页在后台时不推进轮播：避免在不可见状态下继续下载大图、抢占带宽
     const timer = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       setIndex((prev) => (prev + 1) % images.length);
     }, SLIDE_INTERVAL);
 

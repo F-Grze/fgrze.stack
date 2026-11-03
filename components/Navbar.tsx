@@ -8,7 +8,6 @@ import { siteConfig } from '../siteConfig';
 
 export default function Navbar() {
   const [showNav, setShowNav] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -63,18 +62,29 @@ export default function Navbar() {
       setShowNav(true);
       return;
     }
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        setShowNav(false);
-      } else {
-        setShowNav(true);
-      }
-      setLastScrollY(currentScrollY);
+
+    // 用 ref 记录上一次位置，避免把 lastScrollY 放进依赖数组 ——
+    // 那会导致每次滚动都「卸载再重装」监听器，并且每次滚动都触发一次 React 重渲染。
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        // 抖动过滤：滚动量太小（触控板回弹）不改变导航栏状态
+        if (Math.abs(y - lastY) > 8) {
+          setShowNav(!(y > lastY && y > 80));
+          lastY = y;
+        }
+        ticking = false;
+      });
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, isArticlePage]);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isArticlePage]);
 
   const navLinks = [
     { name: '首页', href: '/' },
@@ -98,17 +108,19 @@ export default function Navbar() {
     <>
       {/* PC端导航栏 */}
       <header className={`hidden md:block w-full fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${showNav ? 'translate-y-0' : '-translate-y-full'} bg-[#FBEEE0]/92 dark:bg-slate-900/70 backdrop-blur-xl border-[#E7CEB4]/70 dark:border-white/5 shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_6px_24px_rgba(120,86,54,0.08)]`}>
-        <div className="w-[94%] max-w-[1400px] mx-auto h-16 flex flex-nowrap items-center justify-between gap-6 box-border">
+        <div className="w-[94%] max-w-[1400px] mx-auto h-16 flex flex-nowrap items-center justify-between gap-2 md:gap-3 lg:gap-6 box-border">
           <Link
             href="/"
-            className="flex-none whitespace-nowrap text-[19px] leading-none font-black tracking-tight text-[#3A2A20] dark:text-white hover:text-[#B4613A] dark:hover:text-[#F0C9A8] transition-colors duration-300"
+            className="flex-none whitespace-nowrap text-[15px] md:text-[16px] lg:text-[19px] leading-none font-black tracking-tight text-[#3A2A20] dark:text-white hover:text-[#B4613A] dark:hover:text-[#F0C9A8] transition-colors duration-300"
           >
             {siteConfig.navTitle || siteConfig.authorName}
             <span className="text-[#C0764B] dark:text-[#F0C9A8] mx-[2px]">{siteConfig.navSuffix || 'の'}</span>
             {siteConfig.navAfter || '光影日志'}
           </Link>
 
-          <nav className="flex flex-nowrap items-center justify-end gap-x-5 lg:gap-x-6 xl:gap-x-7 whitespace-nowrap text-[13.5px] leading-none font-bold">
+          {/* 12 个导航项在 768–1024 区间必须保持单行且不溢出：
+              这一段刻意用更小的字号与更紧的间距，lg 以上再恢复原尺寸。 */}
+          <nav className="flex min-w-0 flex-nowrap items-center justify-end gap-x-2 md:gap-x-2.5 lg:gap-x-5 xl:gap-x-7 whitespace-nowrap text-[11.5px] md:text-[12px] lg:text-[13.5px] leading-none font-bold">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || pathname === `${link.href}/`;
               return (

@@ -1,77 +1,55 @@
 "use client";
 import { useEffect, useRef } from 'react';
 
+/**
+ * 点击涟漪。
+ *
+ * 性能要点（旧版是本站最主要的卡顿来源之一）：
+ *  1. 旧版 `animate()` 无条件自调用 requestAnimationFrame，即使没有任何涟漪，
+ *     也在每帧对全屏 canvas 执行 clearRect —— 等于常年白跑 60fps。
+ *     现在改为「有涟漪才启动循环，涟漪清空即停止」。
+ *  2. 标签页隐藏时直接停止循环。
+ *  3. 只在整数像素尺寸下工作，避免每帧的亚像素采样。
+ */
 export default function ClickEffect() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const ctxOrNull = canvas.getContext('2d');
+    if (!ctxOrNull) return;
+    // 收窄成非空常量：TS 不会把上面的 guard 带进后面 class 方法的作用域
+    const ctx: CanvasRenderingContext2D = ctxOrNull;
 
-    let ripples: any[] = [];
+    interface RippleInstance {
+      x: number;
+      y: number;
+      r: number;
+      opacity: number;
+      velocity: number;
+      update(): void;
+      draw(): void;
+    }
+
+    const ripples: RippleInstance[] = [];
+    let rafId = 0;
+    let running = false;
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    window.addEventListener('resize', resize);
-    resize();
 
-    class Ripple {
-      x: number; y: number;
-      r: number;        // 半径
-      maxR: number;     // 最大半径
-      opacity: number;  // 透明度
-      velocity: number; // 扩散速度
-
-      constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-        this.r = 0;
-        this.maxR = 60;   // 涟漪扩散的大小，60 比较克制
-        this.opacity = 0.6;
-        this.velocity = 2.5;
+    const loop = () => {
+      if (document.hidden) {
+        // 后台就停下来，回到前台由 visibilitychange 重新启动
+        running = false;
+        rafId = 0;
+        return;
       }
 
-      update() {
-        this.r += this.velocity;
-        // 随着半径变大，扩散速度减慢（物理模拟）
-        this.velocity *= 0.96;
-        // 透明度线性衰减
-        this.opacity -= 0.015;
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        // 使用你主题里的靛蓝色，并带上动态透明度
-        ctx.strokeStyle = `rgba(129, 140, 248, ${this.opacity})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // 内部再加一个极淡的实心圆，增加“触碰感”
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(129, 140, 248, ${this.opacity * 0.3})`;
-        ctx.fill();
-      }
-    }
-
-    const handleClick = (e: MouseEvent) => {
-      ripples.push(new Ripple(e.clientX, e.clientY));
-    };
-
-    window.addEventListener('click', handleClick);
-
-    const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // 增加全局模糊，让涟漪更有“云端”质感
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = 'rgba(129, 140, 248, 0.5)';
 
       for (let i = 0; i < ripples.length; i++) {
         ripples[i].update();
@@ -81,13 +59,78 @@ export default function ClickEffect() {
           i--;
         }
       }
-      requestAnimationFrame(animate);
+
+      if (ripples.length === 0) {
+        // 没有活跃涟漪 → 停止循环，下一次点击再启动
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        running = false;
+        rafId = 0;
+        return;
+      }
+
+      rafId = requestAnimationFrame(loop);
     };
-    animate();
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      rafId = requestAnimationFrame(loop);
+    };
+
+    class Ripple implements RippleInstance {
+      x: number;
+      y: number;
+      r: number;
+      opacity: number;
+      velocity: number;
+
+      constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+        this.r = 0;
+        this.opacity = 0.6;
+        this.velocity = 2.5;
+      }
+
+      update() {
+        this.r += this.velocity;
+        this.velocity *= 0.96;
+        this.opacity -= 0.015;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(129, 140, 248, ${this.opacity})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(129, 140, 248, ${this.opacity * 0.3})`;
+        ctx.fill();
+      }
+    }
+
+    const handleClick = (e: MouseEvent) => {
+      ripples.push(new Ripple(e.clientX, e.clientY));
+      start();
+    };
+
+    const handleVisibility = () => {
+      if (!document.hidden && ripples.length > 0) start();
+    };
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('click', handleClick);
+    document.addEventListener('visibilitychange', handleVisibility);
+    resize();
 
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('click', handleClick);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -95,6 +138,7 @@ export default function ClickEffect() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[9999]"
+      aria-hidden
     />
   );
 }
