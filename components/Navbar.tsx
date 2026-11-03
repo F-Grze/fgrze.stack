@@ -78,7 +78,9 @@ export default function Navbar() {
     { name: '说说', href: '/moments' },
     { name: '杂谈', href: '/chatter' },
     { name: '友链', href: '/friends' },
+    { name: '天气', href: '/weather' },
     { name: '关于', href: '/about' },
+    { name: '状态', href: '/status' },
   ];
 
   // 🌟 核心：过滤掉“灵境”，专供手机端使用，保证圆盘自动重新均匀排布
@@ -87,21 +89,34 @@ export default function Navbar() {
   return (
     <>
       {/* PC端导航栏 */}
-      <header className={`hidden md:block w-full fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${showNav ? 'translate-y-0' : '-translate-y-full'} bg-white/40 dark:bg-slate-900/50 backdrop-blur-xl border-white/20 dark:border-white/5 shadow-sm`}>
-        <div className="w-[90%] max-w-6xl mx-auto h-16 flex items-center justify-between px-4 sm:px-[30px] box-border">
-          <Link href="/" className="text-xl font-black text-slate-800 dark:text-white tracking-tighter hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300">
+      <header className={`hidden md:block w-full fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${showNav ? 'translate-y-0' : '-translate-y-full'} bg-[#FBEEE0]/92 dark:bg-slate-900/70 backdrop-blur-xl border-[#E7CEB4]/70 dark:border-white/5 shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_6px_24px_rgba(120,86,54,0.08)]`}>
+        <div className="w-[94%] max-w-[1400px] mx-auto h-16 flex flex-nowrap items-center justify-between gap-6 box-border">
+          <Link
+            href="/"
+            className="flex-none whitespace-nowrap text-[19px] leading-none font-black tracking-tight text-[#3A2A20] dark:text-white hover:text-[#B4613A] dark:hover:text-[#F0C9A8] transition-colors duration-300"
+          >
             {siteConfig.navTitle || siteConfig.authorName}
-            <span className="text-indigo-500 mx-1">{siteConfig.navSuffix || 'の'}</span>
-            {siteConfig.navAfter || '宝藏之地'}
+            <span className="text-[#C0764B] dark:text-[#F0C9A8] mx-[2px]">{siteConfig.navSuffix || 'の'}</span>
+            {siteConfig.navAfter || '光影日志'}
           </Link>
-          <nav className="flex gap-8 text-sm font-bold">
-            {/* PC端依然使用全量的 navLinks */}
+
+          <nav className="flex flex-nowrap items-center justify-end gap-x-5 lg:gap-x-6 xl:gap-x-7 whitespace-nowrap text-[13.5px] leading-none font-bold">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || pathname === `${link.href}/`;
               return (
-                <Link key={link.href} href={link.href} className={`relative py-1 transition-colors ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-200 hover:text-indigo-600'}`}>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative inline-flex flex-none items-center whitespace-nowrap py-2 transition-colors duration-200 ${
+                    isActive
+                      ? 'text-[#B4613A] dark:text-[#F0C9A8]'
+                      : 'text-[#4A382C] dark:text-slate-200 hover:text-[#B4613A] dark:hover:text-[#F0C9A8]'
+                  }`}
+                >
                   {link.name}
-                  {isActive && <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-500 rounded-full animate-pulse"></span>}
+                  {isActive && (
+                    <span className="absolute left-1/2 bottom-0.5 h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-[#C0764B] dark:bg-[#F0C9A8]" />
+                  )}
                 </Link>
               );
             })}
@@ -148,7 +163,7 @@ export default function Navbar() {
                 animate={{ scale: 1, opacity: 1, rotate: 0 }}
                 exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
                 transition={{ type: 'spring', damping: 20, stiffness: 150 }}
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] z-[70] pointer-events-none"
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] z-[70] pointer-events-none"
               >
                 <motion.div
                   ref={wheelRef}
@@ -173,7 +188,7 @@ export default function Navbar() {
                         key={link.href}
                         className="absolute top-1/2 left-1/2 w-14 h-14 -ml-7 -mt-7 flex items-center justify-center"
                         style={{
-                          transform: `rotate(${angle}deg) translateY(-115px) rotate(${-angle}deg)`
+                          transform: `rotate(${angle}deg) translateY(-132px) rotate(${-angle}deg)`
                         }}
                       >
                         <motion.div style={{ rotate: inverseRotation }} className="w-full h-full">

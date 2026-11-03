@@ -2,7 +2,7 @@
 
 export const siteConfig = {
   // 1. 网站标题与博主信息
-  title: "F-Grze の 涂鸦档案",
+  title: "F-Grzeの光影日志",
   faviconUrl: "/icon.png",
   authorName: "F-Grze",
   bio: "在代码与涂鸦之间往返的人。写点前端、做点视觉，把墙上的噪音整理成页面。",
@@ -12,7 +12,7 @@ export const siteConfig = {
   // 👇 导航栏中间的那个后缀/分隔符（默认是 の）
   navSuffix: "の",
 
-  navAfter: "涂鸦档案",
+  navAfter: "光影日志",
 
   // 2. 头像设置 (支持网络链接，或将图片放入 public 文件夹后使用 "/me.jpg")
   avatarUrl: "/avatar.webp",
