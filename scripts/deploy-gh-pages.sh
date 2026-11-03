@@ -37,7 +37,9 @@ bash scripts/build-static.sh
 cd out
 git init -q
 git add -A
-git commit -qm "deploy: $(date '+%Y-%m-%d %H:%M')"
+# out/ 是一个全新的独立仓库，需要单独给一次提交身份
+git -c user.name="${GIT_AUTHOR_NAME:-F-Grze}" -c user.email="${GIT_AUTHOR_EMAIL:-hi@f-grze.dev}" \
+  commit -qm "deploy: $(date '+%Y-%m-%d %H:%M')"
 git branch -M gh-pages
 git remote remove origin 2>/dev/null || true
 git remote add origin "$REMOTE"
