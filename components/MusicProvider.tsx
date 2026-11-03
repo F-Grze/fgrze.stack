@@ -84,20 +84,47 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     const fetchMusicData = async () => {
       try {
-        const res = await fetch(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`);
-        const rawResults = await res.json();
+        // 优先走站内接口（Vercel / Node 部署）；纯静态托管时接口不存在，自动降级到公开 Meting 服务
+        let rawResults: any[] = [];
+        try {
+          const res = await fetch(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`);
+          if (!res.ok) throw new Error(`status ${res.status}`);
+          rawResults = await res.json();
+        } catch {
+          rawResults = (
+            await Promise.all(
+              siteConfig.cloudMusicIds.map(async (id: string) => {
+                try {
+                  const r = await fetch(
+                    `https://api.injahow.cn/meting/?server=netease&type=song&id=${id}`
+                  );
+                  const d = await r.json();
+                  const s = Array.isArray(d) ? d[0] : d;
+                  if (!s || !s.url || s.error) return null;
+                  return { id: String(id), name: s.name, artist: s.artist, url: s.url, pic: s.pic, lrc: s.lrc };
+                } catch {
+                  return null;
+                }
+              })
+            )
+          ).filter(Boolean);
+        }
 
         const mergedPlaylist = rawResults
           .filter((song: any) => song && song.url && !song.error)
-          .map((song: any) => ({
-            id: song.id || Math.random().toString(),
-            title: song.name || '未知歌曲',
-            artist: song.artist || song.author || '未知歌手',
-            cover: song.cover || song.pic || '/media/img-06.webp',
-            src: song.url,
-            lrcUrl: null,
-            lyrics: song.lrc ? parseLrc(song.lrc) : []
-          }));
+          .map((song: any) => {
+            // lrc 可能是歌词文本，也可能是歌词地址
+            const lrcIsUrl = typeof song.lrc === 'string' && song.lrc.startsWith('http');
+            return {
+              id: song.id || Math.random().toString(),
+              title: song.name || '未知歌曲',
+              artist: song.artist || song.author || '未知歌手',
+              cover: song.cover || song.pic || '/media/img-06.webp',
+              src: song.url,
+              lrcUrl: song.lrcUrl || (lrcIsUrl ? song.lrc : null),
+              lyrics: song.lrc && !lrcIsUrl ? parseLrc(song.lrc) : []
+            };
+          });
 
         if (isMounted) {
           if (mergedPlaylist.length > 0) setPlaylist(mergedPlaylist);
