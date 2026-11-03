@@ -49,12 +49,14 @@ export default function MomentsPage() {
   return (
     <div className="min-h-screen relative pb-10 flex flex-col">
       <Navbar />
-      <PageTransition className="flex-1 flex flex-col">
-        <MomentList
-          moments={allMoments}
-          authorName={siteConfig.authorName}
-          avatarUrl={siteConfig.avatarUrl}
-        />
+      <PageTransition>
+        <div className="flex-1 flex flex-col">
+          <MomentList
+            moments={allMoments}
+            authorName={siteConfig.authorName}
+            avatarUrl={siteConfig.avatarUrl}
+          />
+        </div>
       </PageTransition>
     </div>
   );

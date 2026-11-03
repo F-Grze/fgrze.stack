@@ -55,6 +55,8 @@ interface MusicContextType {
   prevSong: () => void;
   handleSeek: (e: React.ChangeEvent<HTMLInputElement>) => void;
   playSong: (index: number) => void;
+  /** 点选某首歌曲（与 playSong 同义，保留给不同调用方） */
+  selectSong: (index: number) => void;
   setVolume: (value: number) => void;
   toggleMute: () => void;
   togglePlayMode: () => void;
@@ -273,7 +275,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         playlist, currentIndex, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading,
         volume, isMuted, playMode, // 暴露新状态
         togglePlay, nextSong, prevSong, handleSeek,
-        playSong, setVolume, toggleMute, togglePlayMode // 暴露新方法
+        playSong, selectSong: playSong, setVolume, toggleMute, togglePlayMode // 暴露新方法
     }}>
       {children}
       {currentSong && (
