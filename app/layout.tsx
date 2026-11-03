@@ -17,14 +17,19 @@ import Analytics from '../components/Analytics';
 
 import MobileBackButton from '../components/MobileBackButton';
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// 字体一律 preload: false
+// 中文字体被拆成大量 unicode-range 分片（每个 50-80KB），preload 会让浏览器
+// 在首屏并发拉取多个分片，把连接占满，导致 async chunk 脚本被挤到队尾迟迟拿不到
+// —— 极端情况下页面会长时间处于「脚本未就绪」状态。交给浏览器按需加载更稳。
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], preload: false });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], preload: false });
 
 const notoSerif = Noto_Serif_SC({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
   variable: "--font-serif",
   display: 'swap',
+  preload: false,
 });
 
 const BASE_PATH = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/+$/, '');

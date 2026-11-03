@@ -59,14 +59,45 @@ function rewrite(str) {
   return str;
 }
 
+/**
+ * 提升脚本资源优先级
+ *
+ * 背景：GitHub Pages 走 CDN，访客首屏会同时触发十几条资源请求
+ * （背景大图、中文字体分片、文章封面…）。当连接被这些大资源占满时，
+ * `<script async>` 会被浏览器排到队尾，导致 React 迟迟无法 hydration，
+ * 页面长时间停留在「脚本未就绪」状态。
+ *
+ * 这里直接在产物 HTML 上做两件事：
+ *   1. 给所有外链 <script> 加 fetchpriority="high"
+ *   2. 把 preload 脚本的 fetchPriority 从 low 提到 high
+ * 浏览器会优先为它们分配连接，交互功能得以尽快就绪。
+ */
+function boostScripts(str) {
+  let out = str.replace(/<script\b([^>]*\bsrc="[^"]+"[^>]*)>/g, (m, attrs) =>
+    /fetchpriority/i.test(attrs) ? m : `<script${attrs} fetchpriority="high">`,
+  );
+  out = out.replace(
+    /(<link[^>]*rel="preload"[^>]*as="script"[^>]*fetchPriority=")low(")/gi,
+    '$1high$2',
+  );
+  return out;
+}
+
 const files = walk(OUT);
 let changed = 0;
+let boosted = 0;
 for (const f of files) {
   const before = fs.readFileSync(f, 'utf8');
-  const after = rewrite(before);
+  let after = rewrite(before);
+  if (f.endsWith('.html')) {
+    const b = boostScripts(after);
+    if (b !== after) boosted++;
+    after = b;
+  }
   if (after !== before) {
     fs.writeFileSync(f, after);
     changed++;
   }
 }
 console.log(`✅ 资源路径已加前缀 ${BASE}（改写 ${changed}/${files.length} 个文件）`);
+console.log(`✅ 脚本优先级已提升（${boosted} 个 HTML）`);
