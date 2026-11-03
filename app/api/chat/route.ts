@@ -1,7 +1,9 @@
 // app/api/chat/route.ts
 import { siteConfig } from '../../../siteConfig'; // 确保这里的路径指向你的 siteConfig
 
-export const runtime = 'edge';
+// Edge runtime 在 Vercel 上已弃用，且匿名部署不支持；
+// 本路由需要用 process.env 读取服务端 API Key，统一走 Node.js runtime。
+export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   console.log("🚀 [1/5] 路由进入：开始对接 Gemini 3 脑回路");
