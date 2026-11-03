@@ -66,12 +66,40 @@ siteConfig.ts        # 全站配置中心：标题、头像、壁纸、社交、
 
 ### 方案 A：Vercel（功能最完整，推荐）
 
+GitHub Pages 是纯静态的，`/api/*` 不会执行；Vercel 会把 API 路由编译成 Serverless Functions，音乐播放器、天气、AI 猫、Gitalk 代理都能原生工作。
+
+仓库已带 `vercel.json`，面板上确认这几项：
+
+| Vercel 设置项 | 填什么 |
+| --- | --- |
+| Framework Preset | Next.js |
+| Root Directory | **留空**（`package.json` 就在仓库根目录） |
+| Deploy Branch | **`main`**（不是 `gh-pages`，那个分支里只有构建产物，没有 `package.json`） |
+| Install Command | `corepack enable && pnpm install --frozen-lockfile` |
+| Build Command | `pnpm build` |
+| Node.js Version | 20.9 或更高（建议 22） |
+
+需要配置的环境变量（可选）：`GEMINI_API_KEY`、`QWEATHER_KEY`。
+
+也可以用 CLI：
+
 ```bash
 npm i -g vercel && vercel
 ```
 
-`app/api/*` 会作为 Serverless Function 运行，音乐播放器、天气、AI 猫、Gitalk 代理都可用。
-需要配置的环境变量（可选）：`GEMINI_API_KEY`、`QWEATHER_KEY`。
+**「No Next.js version detected」这个报错的成因与修复**
+
+Vercel 读的是 Root Directory 下的 `package.json`，找不到 `next` 就报这个错。本仓库原本同时存在 `package-lock.json`（上游遗留）和 `pnpm-lock.yaml`（实际使用）**两个锁文件**，且 `package.json` 没声明 `packageManager`，Vercel 无法判断该用哪个包管理器，依赖装不全 → 检测不到 `next`。
+
+已做的修复（已推送到 `main`）：
+
+- 删除 `package-lock.json`，只保留 `pnpm-lock.yaml`
+- `package.json` 增加 `"packageManager": "pnpm@10.28.2"` 与 `"engines": { "node": ">=20.9.0" }`
+- `package.json` 增加 `"pnpm": { "onlyBuiltDependencies": ["sharp"] }`，放行 pnpm 10 默认拦截的原生模块构建脚本
+- 新增 `vercel.json`（声明 framework / installCommand / buildCommand）与 `.vercelignore`
+- 新增 `vercel-build` 脚本别名
+
+改完后在 Vercel 面板点一次 **Redeploy** 即可。如果仍报同样的错，那就是面板上的 Root Directory 被手动填过（比如 `src` 或 `f-grze-blog`），把它**清空**即可。
 
 ### 方案 B：GitHub Pages（纯静态）
 
@@ -84,8 +112,14 @@ pnpm build:static          # 产物在 out/，会自动处理 API 路由与 next
 
 **注意两点**：
 
-- 静态模式下没有服务端，`/api/*` 不存在，音乐播放器会显示 "NO MUSIC AVAILABLE"，天气 / AI 猫 / 评论不可用；其余页面完全正常。
-- 站点里用的是 `/bg/...`、`/media/...` 这类绝对路径，所以仓库要建成 `<用户名>.github.io`（根路径），或绑定自定义域名。放到子路径需要额外配置 `basePath` 并替换所有绝对路径。
+- 静态模式下没有服务端，`/api/*` 不存在，音乐播放器会自动降级到公开 Meting 接口（仍可播放），天气走前端直连 Open-Meteo，AI 猫 / 评论不可用；其余页面完全正常。
+- 站点里用的是 `/bg/...`、`/media/...` 这类绝对路径。放在仓库子路径时，`scripts/build-static.sh` 会自动从 `git remote` 推断 `basePath` 并统一给所有资源路径补前缀，无需手改：
+
+  ```bash
+  pnpm build:static                       # 自动推断（仓库名 → /<repo>）
+  BASE_PATH= pnpm build:static            # 显式根路径（自有域名 / Vercel）
+  BASE_PATH=/<repo> pnpm build:static     # 显式指定子路径
+  ```
 
 ## 六、版权
 
