@@ -38,10 +38,16 @@ export default function BackgroundSlider() {
           className="bg-slide absolute inset-0 transition-opacity duration-[1600ms] ease-in-out"
           style={{ opacity: i === index ? 1 : 0 }}
         >
+          {/* 只有首张走高优先级，其余懒加载。
+              背景图整屏铺满，5 张同时抢占连接会拖慢首屏脚本，
+              在 CDN 限流时甚至会让 async chunk 一直排队（曾导致整站白屏）。 */}
           <img
             src={img}
             alt=""
             aria-hidden
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchPriority={i === 0 ? 'high' : 'low'}
             className="bg-art absolute inset-0 h-full w-full object-cover"
             style={{ animation: i === index ? 'kenburns 16s ease-out both' : 'none' }}
           />

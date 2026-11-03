@@ -58,22 +58,33 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="zh-CN" className={`${geistSans.variable} ${geistMono.variable} ${notoSerif.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
+        {/* 渐进增强：内容默认可见，绝不依赖 JS 解封。
+            早期版本用 `visibility:hidden` + JS 加 `.splash-seen` 解封，
+            一旦脚本加载失败（网络受限 / CDN 抖动）整站会永久白屏。
+            现在改为「默认可见 + CSS 淡入」，启动屏只是覆盖在上层的动画遮罩。 */}
         <style
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
-              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }
-              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+              #app-mount-root { opacity: 1; visibility: visible; pointer-events: auto; }
+              @media (prefers-reduced-motion: no-preference) {
+                #app-mount-root { animation: app-reveal 0.7s ease-out both; }
+              }
+              @keyframes app-reveal {
+                from { opacity: 0; transform: translateY(8px); }
+                to   { opacity: 1; transform: none; }
+              }
             `
           }}
         />
+        {/* 已看过启动屏的访客直接跳过（类名由 SplashScreen 在 hydration 后添加） */}
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               try {
                 if (sessionStorage.getItem('hasSeenSplash') === 'true') {
-                  document.documentElement.classList.add('splash-seen');
+                  document.documentElement.classList.add('splash-skip');
                 }
               } catch (e) {}
             `

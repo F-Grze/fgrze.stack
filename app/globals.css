@@ -548,3 +548,14 @@ html.dark .animate-pulse { animation-duration: 3s !important; }
   .animate-pulse,
   .animate-spin { animation: none !important; }
 }
+
+/* ========================================================
+   16. 启动屏跳过标记
+   --------------------------------------------------------
+   已看过启动屏的访客由 head 内联脚本在首帧加 .splash-skip，
+   遮罩层直接不渲染。内容本身默认可见，不依赖任何 JS 解封。
+   ======================================================== */
+html.splash-skip .splash-veil,
+html.splash-skip [data-splash-veil] {
+  display: none !important;
+}

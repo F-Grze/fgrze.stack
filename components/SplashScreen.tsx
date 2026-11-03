@@ -4,36 +4,48 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { siteConfig } from '../siteConfig';
 
+/**
+ * 启动屏（Loading Veil）
+ *
+ * 设计要点 —— **绝不依赖 JS 才能揭开**：
+ *   1. 内容在 layout 中默认可见（opacity:1），启动屏只是覆盖在上面的动画层；
+ *   2. 已看过启动屏的访客，由 head 里的内联脚本在首帧就加上 `.splash-skip`，
+ *      遮罩不渲染，无感知跳过；
+ *   3. 即使 hydration 失败（脚本加载被 CDN 限流 / 网络抖动），
+ *      页面内容依然完整可读 —— 彻底消除「脚本挂掉 → 整站白屏」的历史问题。
+ */
 export default function SplashScreen() {
   const [show, setShow] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash') === 'true';
 
-    if (!hasSeenSplash) {
-      setShow(true);
-      const timer = setTimeout(() => {
-        exitSplash();
-      }, 2200);
-      return () => clearTimeout(timer);
-    } else {
-      // 容错处理：确保直接访问时类名存在
-      document.documentElement.classList.add('splash-seen');
+    let hasSeenSplash = false;
+    try {
+      hasSeenSplash = sessionStorage.getItem('hasSeenSplash') === 'true';
+    } catch {
+      /* ignore */
     }
+
+    if (hasSeenSplash) {
+      // 容错处理：确保直接访问时类名存在
+      document.documentElement.classList.add('splash-skip');
+      return;
+    }
+
+    setShow(true);
+    try {
+      sessionStorage.setItem('hasSeenSplash', 'true');
+    } catch {
+      /* ignore */
+    }
+    // 动画结束后卸载遮罩节点，避免残留在 DOM 里
+    const timer = setTimeout(() => setShow(false), 2400);
+    return () => clearTimeout(timer);
   }, []);
 
-  const exitSplash = () => {
-    setShow(false);
-    sessionStorage.setItem('hasSeenSplash', 'true');
-
-    // 【核心解封】：动画快结束时，给 html 加上类名，CSS 会自动把内容显示出来
-    setTimeout(() => {
-      document.documentElement.classList.add('splash-seen');
-    }, 500);
-  };
-
+  // SSR / hydration 之前不输出遮罩节点（此时内容默认可见，不会白屏）
   if (!isMounted) return null;
 
   return (
