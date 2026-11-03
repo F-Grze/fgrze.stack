@@ -32,27 +32,29 @@ export default function BackgroundSlider() {
       {/* 纸面底色 */}
       <div className="absolute inset-0 bg-[#f6f4ee]" />
 
-      {images.map((img, i) => (
-        <div
-          key={img}
-          className="bg-slide absolute inset-0 transition-opacity duration-[1600ms] ease-in-out"
-          style={{ opacity: i === index ? 1 : 0 }}
-        >
-          {/* 只有首张走高优先级，其余懒加载。
-              背景图整屏铺满，5 张同时抢占连接会拖慢首屏脚本，
-              在 CDN 限流时甚至会让 async chunk 一直排队（曾导致整站白屏）。 */}
-          <img
-            src={img}
-            alt=""
-            aria-hidden
-            loading={i === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-            fetchPriority={i === 0 ? 'high' : 'low'}
-            className="bg-art absolute inset-0 h-full w-full object-cover"
-            style={{ animation: i === index ? 'kenburns 16s ease-out both' : 'none' }}
-          />
-        </div>
-      ))}
+      {/* 只渲染「当前 + 下一张」。
+          背景图是 position:absolute 全屏铺满，浏览器会认为它们全都在视口内，
+          loading="lazy" 形同虚设 —— 5 张大图会同时抢占连接，把 async 脚本挤到队尾，
+          导致 React 长时间无法 hydration。这里改为按需挂载，切换时才请求下一张。 */}
+      {images.map((img, i) =>
+        i <= index + 1 ? (
+          <div
+            key={img}
+            className="bg-slide absolute inset-0 transition-opacity duration-[1600ms] ease-in-out"
+            style={{ opacity: i === index ? 1 : 0 }}
+          >
+            <img
+              src={img}
+              alt=""
+              aria-hidden
+              decoding="async"
+              fetchPriority={i === 0 ? 'high' : 'low'}
+              className="bg-art absolute inset-0 h-full w-full object-cover"
+              style={{ animation: i === index ? 'kenburns 16s ease-out both' : 'none' }}
+            />
+          </div>
+        ) : null,
+      )}
 
       {/* 整体压一层薄纸色，保证浅色主题的明度 */}
       <div className="absolute inset-0 bg-[#f6f4ee]/26" />

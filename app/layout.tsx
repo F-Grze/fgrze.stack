@@ -26,7 +26,9 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 const notoSerif = Noto_Serif_SC({
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
+  // 只保留 400 / 700 两个字重：Noto Serif SC 会按 unicode-range 拆成大量分片，
+  // 每多一个字重就多出一整套分片文件，首屏并发请求数会成倍增长。
+  weight: ["400", "700"],
   variable: "--font-serif",
   display: 'swap',
   preload: false,
