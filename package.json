@@ -1,5 +1,5 @@
 {
-  "name": "my-blog",
+  "name": "f-grze-light-and-shadow-log",
   "version": "0.4.1",
   "private": true,
   "scripts": {
@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "build:static": "bash scripts/build-static.sh",
-    "deploy:pages": "bash scripts/deploy-gh-pages.sh"
+    "deploy:pages": "bash scripts/deploy-gh-pages.sh",
+    "vercel-build": "pnpm build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -61,5 +63,14 @@
     "eslint-config-next": "16.2.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.28.2",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
   }
 }

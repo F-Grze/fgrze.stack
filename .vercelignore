@@ -1,0 +1,26 @@
+# Vercel 上传时忽略的文件
+# 静态导出产物（GitHub Pages 用，Vercel 不需要）
+out
+.static-backup
+
+# 构建缓存与依赖
+.next
+node_modules
+
+# 版本控制与编辑器
+.git
+.gitignore
+.vscode
+.idea
+
+# 日志与临时文件
+*.log
+.DS_Store
+__pycache__
+*.py[cod]
+
+# Vercel 自身的元数据
+.vercel
+
+# 说明文档
+# README.md 保留，方便在 Vercel 控制台展示

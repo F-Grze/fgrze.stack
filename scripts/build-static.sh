@@ -2,8 +2,9 @@
 # 构建纯静态站点（用于 GitHub Pages / 任意静态托管）
 #
 # 用法：
-#   pnpm build:static                                   # 根域名部署
-#   BASE_PATH=/<repo> pnpm build:static                 # 仓库子路径部署
+#   pnpm build:static                                   # 自动从 git remote 推断仓库子路径
+#   BASE_PATH=/<repo> pnpm build:static                 # 显式指定仓库子路径
+#   BASE_PATH= pnpm build:static                        # 显式置空 → 根路径部署（Vercel / 自有域名）
 #   BASE_PATH=/<repo> pnpm build:static --no-rewrite    # 跳过资源路径重写
 #
 # 未显式指定 BASE_PATH 时，会从 git remote 自动推断仓库名：
@@ -14,14 +15,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# 记录 BASE_PATH 是否被显式指定（显式置空也算指定）
+BASE_PATH_WAS_SET="${BASE_PATH+x}"
 BASE_PATH="${BASE_PATH:-}"
 NO_REWRITE=0
 for arg in "$@"; do
   [ "$arg" = "--no-rewrite" ] && NO_REWRITE=1
 done
 
-# 自动推断 basePath（仅在未显式指定时生效）
-if [ -z "$BASE_PATH" ]; then
+# 自动推断 basePath（仅在未显式设置 BASE_PATH 时生效）
+#   BASE_PATH= pnpm build:static   → 显式置空，强制根路径部署（Vercel / 自有域名）
+if [ -z "$BASE_PATH_WAS_SET" ]; then
   REMOTE_URL="$(git config --get remote.origin.url 2>/dev/null || true)"
   REPO_NAME=""
   if [ -n "$REMOTE_URL" ]; then
@@ -44,6 +48,8 @@ export NEXT_PUBLIC_BASE_PATH="$BASE_PATH"
 
 BACKUP_DIR=".static-backup"
 rm -rf "$BACKUP_DIR" out
+# 清掉上一次构建缓存：basePath 变化时残留的 .next 会让构建失败或产出错误路径
+rm -rf .next
 mkdir -p "$BACKUP_DIR"
 
 # 1. 临时移走 API 路由：静态导出不支持 route handler
