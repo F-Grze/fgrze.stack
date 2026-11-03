@@ -102,7 +102,58 @@ Root Directory 留空、Node 22、Install `corepack enable && pnpm install --fro
 
 ---
 
-## 三、性能与部署稳定性
+## 三、【重要】线上白屏问题：定位与彻底修复
+
+### 现象
+
+GitHub Pages 上访问站点，页面**一片空白**，HTML 源码却完全正常。
+
+### 根因（三层叠加）
+
+1. **硬隐藏依赖 JS 解封**
+   `app/layout.tsx` 里原本写着
+   `#app-mount-root { opacity: 0; visibility: hidden; }`，
+   再由 `SplashScreen` 在 hydration 完成后给 `<html>` 加 `.splash-seen` 才显示。
+   —— 脚本一旦没执行，**内容永久不可见**，且没有任何降级路径。
+
+2. **首屏并发请求把连接占满**
+   首页会同时触发 5 张背景大图（270KB × 5）、3 个中文字体分片、多张文章封面。
+   `loading="lazy"` 对 `position:absolute` 全屏背景图**无效**（浏览器认为它们全在视口内）。
+   连接被占满后，`async` chunk 脚本一直排队拿不到响应 → React 永远无法 hydration。
+
+3. **CDN 缓存与产物版本错配**
+   GitHub Pages 的 CDN 会缓存 HTML 最多 10 分钟。缓存期内访客拿到的可能是上一版 HTML，
+   而它引用的 chunk 文件名在新一版产物里已经变了 → 脚本全部 404。
+
+### 修复
+
+| 层 | 改动 | 文件 |
+| --- | --- | --- |
+| 兜底 | 内容**默认可见**（`opacity:1` + 纯 CSS 淡入 `app-reveal`），彻底不依赖 JS 解封 | `app/layout.tsx` |
+| 兜底 | 启动屏改为 `.splash-skip` 跳过 + 2.4s 自动卸载，遮罩不再「扣住」内容 | `components/SplashScreen.tsx` |
+| 减负 | 背景图**只渲染「当前 + 下一张」**，切换时才请求 | `components/BackgroundSlider.tsx` |
+| 减负 | `next/font` 全部 `preload: false`；Noto Serif SC 字重 900/700 → 700 | `app/layout.tsx` |
+| 减负 | 头像 / 文章封面 / 杂谈封面 / 相册封面全部 `loading="lazy"` | 多个组件 |
+| 减负 | 背景图 WebP 重新压缩：1187KB → **743KB** | `public/bg/*.webp` |
+| 提权 | 产物 HTML 中所有外链 `<script>` 加 `fetchpriority="high"`，preload 脚本由 `low` 提为 `high` | `scripts/rewrite-assets.mjs` |
+| 兼容 | 部署时**保留上一版 `_next/static`**，让 CDN 缓存切换期内新旧 HTML 都能命中 chunk | `scripts/deploy-gh-pages.sh` |
+
+**首屏 preload 数量：9 → 2**（仅背景首图 + 入口脚本）。
+
+### 效果
+
+| 场景 | 修复前 | 修复后 |
+| --- | --- | --- |
+| 正常网络 | 白屏（React 未 hydrate，内容被隐藏） | 内容可见 + 全部交互正常 |
+| 弱网 / CDN 限流 | 白屏 | 内容可见可读，脚本就绪后交互自动补上 |
+| **完全禁用 JS** | 白屏 | **内容完整可读**（468 字符，站点标题在位） |
+
+> 验收脚本 `preview2/verify_nojs.py` 专门覆盖「禁用 JS」场景，
+> 这是判断站点是否真正具备渐进增强能力的硬指标。
+
+---
+
+## 四、性能与部署稳定性
 
 | 项 | 做法 |
 | --- | --- |
@@ -119,7 +170,7 @@ Root Directory 留空、Node 22、Install `corepack enable && pnpm install --fro
 
 ---
 
-## 四、中低优先级功能
+## 五、中低优先级功能
 
 | 功能 | 位置 |
 | --- | --- |
@@ -137,7 +188,7 @@ Root Directory 留空、Node 22、Install `corepack enable && pnpm install --fro
 
 ---
 
-## 五、环境变量
+## 六、环境变量
 
 复制 `.env.example` 为 `.env.local` 后填写：
 
@@ -150,7 +201,7 @@ Root Directory 留空、Node 22、Install `corepack enable && pnpm install --fro
 
 ---
 
-## 六、常用命令与部署
+## 七、常用命令与部署
 
 ```bash
 pnpm dev                 # 本地开发
@@ -169,9 +220,11 @@ cd /workspace/f-grze-blog
 GITHUB_TOKEN=<你的新 token> pnpm deploy:pages
 ```
 
-> ⚠️ 上一轮使用的 fine-grained PAT 已失效（GitHub API 返回 401 Bad credentials），
-> 需要重新生成一个带 **Contents: Read and write** 权限的 token。
-> `main` 分支的 4 个提交已在本地准备好，token 一换即可推送。
+> ✅ 已用新 token 完成推送：`main`（源码）与 `gh-pages`（产物）均已同步到线上。
+> token 需带 **Contents: Read and write** 权限；若报 401，换一个 fine-grained PAT 即可。
+
+> 💡 **部署后请等待 1–3 分钟**再访问：GitHub Pages 需要重建，CDN 也要同步新产物。
+> 期间若偶发旧资源 404，属于缓存过渡期，刷新一次即可（部署脚本已保留历史静态资源兜底）。
 
 ### 部署到 Vercel
 
@@ -191,7 +244,7 @@ pnpm deploy:pages
 
 ---
 
-## 七、文件清单
+## 八、文件清单
 
 | 路径 | 说明 |
 | --- | --- |
@@ -199,7 +252,7 @@ pnpm deploy:pages
 | `f-grze-blog.zip` | 同上的压缩包（已排除 node_modules / .next / out） |
 | `f-grze-blog/out/` | 已构建好的静态产物，`out/` 内是一个独立的 gh-pages git 仓库，可直接推送 |
 | `preview/` | 上一轮导航栏改造的截图 |
-| `preview-final/` | **本轮**交付截图（13 张，压缩到 2.1MB） |
+| `preview-final/` | **本轮**交付截图（21 张，已压缩为 JPG） |
 | `preview2/` | 完整验收截图（27 张）+ Playwright 自动化验收脚本，可随时重跑 |
 
 ### 验收脚本（可重跑）
@@ -211,7 +264,12 @@ python3 verify_post.py     # 文章页：进度条 / 目录锚点 / 代码复制
 python3 verify_degraded.py # 降级通道：拦截 /api/weather 验证自动切换
 python3 verify_static.py   # 静态产物（GitHub Pages 本地模拟）验收
 python3 final_verify.py    # 最终全量验收
+python3 verify_nojs.py [BASE]  # 【白屏回归】含「禁用 JS 内容仍可读」硬指标
+python3 verify_live.py  [BASE]  # 线上/本地全功能验收（21 项）
 ```
 
-**最近一次全量验收结果：13 项功能检查全绿，6 种分辨率 × 6 个页面横向溢出均为 0px，无致命 JS 错误。**
+**最近一次全量验收结果：**
+- `verify_live.py`：**21 项功能检查全绿**（天气页 6 项 / 首页 4 项 / 相册 3 项 / 文章页 4 项 / 状态页 1 项 / RSS 1 项 / 移动端 1 项），无 JS 运行时错误
+- `verify_nojs.py`：**9 项全绿**，其中「禁用 JS 后首页 / 天气页内容仍完整可见可读」是本轮重点
+- 6 种分辨率 × 6 个页面横向溢出均为 **0px**
 
