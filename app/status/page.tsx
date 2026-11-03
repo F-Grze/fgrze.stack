@@ -7,6 +7,7 @@ import { siteConfig } from '../../siteConfig';
 import { albums } from '../../data/albums';
 import { projectsData } from '../../data/projects';
 import { friendsData } from '../../data/friends';
+import TrafficStats from '../../components/TrafficStats';
 
 export const metadata = {
   title: '状态 | ' + siteConfig.title,
@@ -14,7 +15,7 @@ export const metadata = {
 };
 
 function countMd(dir: string) {
-  const p = path.join(process.cwd(), dir);
+  const p = path.join(/*turbopackIgnore: true*/ process.cwd(), dir);
   try {
     return fs.readdirSync(p).filter((f) => f.endsWith('.md')).length;
   } catch {
@@ -43,9 +44,10 @@ export default function StatusPage() {
   ];
 
   const modules = [
-    { name: '站内搜索', state: '正常', tone: 'ok', note: '本地索引，无服务端依赖' },
     { name: '音乐播放', state: '正常', tone: 'ok', note: '公开 Meting 接口，静态可用' },
-    { name: '天气', state: '正常', tone: 'ok', note: 'Open-Meteo 实时数据' },
+    { name: '天气', state: '正常', tone: 'ok', note: '高德天气 · 服务端代理 · 8 分钟缓存' },
+    { name: 'RSS 订阅', state: '正常', tone: 'ok', note: '/rss.xml · 全站文章更新' },
+    { name: '站内搜索', state: '正常', tone: 'ok', note: '本地索引，无服务端依赖' },
     { name: '评论', state: '未启用', tone: 'warn', note: '需在 siteConfig 填入 Gitalk 参数' },
     { name: '每日选刊', state: '已关闭', tone: 'off', note: '与源模板一致，无归档数据' },
   ];
@@ -110,8 +112,15 @@ export default function StatusPage() {
             ))}
           </div>
 
+          {/* 访问统计 */}
+          <div className="mt-10 mb-4 flex items-center gap-3">
+            <span className="h-3 w-[3px] rounded-full bg-[#B4613A]" />
+            <h2 className="rounded-full bg-white/75 px-3 py-1 text-[12px] font-black tracking-[0.2em] text-[#3F2F23] backdrop-blur-sm dark:bg-slate-700/60 dark:text-slate-100">访问</h2>
+          </div>
+          <TrafficStats />
+
           <p className="mt-8 text-center text-[11px] text-[#6F5A46]">
-            构建于 GitHub Pages · 静态导出 · 最近构建时间见页面底部
+            站点自建部署 · 静态导出 + 服务端代理 · 最近构建时间见页面底部
           </p>
         </div>
       </PageTransition>

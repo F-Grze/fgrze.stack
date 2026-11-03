@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
 
   // 下面这些可以保留
   images: {
-    unoptimized: true,
+    // 服务端部署（Vercel）时开启 Next 图片优化：自动 webp/avif + 尺寸裁剪
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
   typescript: {
     ignoreBuildErrors: true, // 忽略 TS 错误，方便快速部署

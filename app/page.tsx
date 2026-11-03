@@ -64,6 +64,9 @@ export default function Home() {
   } catch (e) {}
   const top5Posts = allPosts.length > 0 ? allPosts.slice(0, 5) : [{ slug: 'none', title: '暂无文章', description: '快去写第一篇吧！', cover: siteConfig.defaultPostCover, date: '', formattedDate: '' }];
 
+  // 🌟 搜索框只需要元信息：把 markdown 正文剔掉，避免整篇文章内容被打进 RSC payload
+  const searchablePosts = allPosts.map(({ content, ...meta }) => meta);
+
   const chattersDirectory = path.join(process.cwd(), 'chatters');
   let allChatters: any[] = [];
   try {
@@ -96,7 +99,17 @@ export default function Home() {
         <PageTransition>
           {/* 🌟 调整整体容器的内边距，适应手机端更小的屏幕 */}
           <div className="w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10">
-            <SearchBar posts={allPosts} />
+            <SearchBar
+              posts={searchablePosts}
+              albums={albums.map((a) => ({
+                id: a.id,
+                title: a.title,
+                description: a.description,
+                cover: a.cover,
+                photoCount: a.photos.length,
+                group: a.group,
+              }))}
+            />
 
             <main className="flex flex-col gap-6 w-full mt-6">
               {/* 第一行：个人信息 + 播放器 */}

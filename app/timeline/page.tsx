@@ -16,6 +16,7 @@ export default function Timeline() {
   const postsDirectory = path.join(process.cwd(), 'posts');
   let posts: any[] = [];
   let tagCounts: Record<string, number> = {};
+  let categoryCounts: Record<string, number> = {};
 
   try {
     if (fs.existsSync(postsDirectory)) {
@@ -34,12 +35,16 @@ export default function Timeline() {
           tagCounts[tag] = (tagCounts[tag] || 0) + 1;
         });
 
+        const category = typeof data.category === 'string' && data.category ? data.category : '技术';
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+
         posts.push({
           slug,
           title: data.title || '无标题',
           date: data.date || '1970-01-01',
           description: data.description || '',
           tags: postTags,
+          category,
           cover: data.cover || siteConfig.defaultPostCover,
         });
       });
@@ -57,13 +62,17 @@ export default function Timeline() {
     .map(name => ({ name, count: tagCounts[name] }))
     .sort((a, b) => b.count - a.count);
 
+  const categoriesArray = Object.keys(categoryCounts)
+    .map(name => ({ name, count: categoryCounts[name] }))
+    .sort((a, b) => b.count - a.count);
+
   return (
     // 🌟 2. 在最外层用 ToastProvider 包裹整个页面
     <ToastProvider>
       <div className="min-h-screen relative pb-32">
         <Navbar />
         <PageTransition>
-          <TimelineClient posts={posts} tags={tagsArray} />
+          <TimelineClient posts={posts} tags={tagsArray} categories={categoriesArray} />
         </PageTransition>
       </div>
     </ToastProvider>

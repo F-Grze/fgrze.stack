@@ -21,7 +21,7 @@ import AboutClient from '../../components/AboutClient';
 import { Suspense } from 'react';
 
 function getDirActivities(dirName: string, typeLabel: '文章' | '杂谈' | '说说', linkPrefix: string) {
-  const dirPath = path.join(process.cwd(), dirName);
+  const dirPath = path.join(/*turbopackIgnore: true*/ process.cwd(), dirName);
   if (!fs.existsSync(dirPath)) return [];
 
   const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.md'));

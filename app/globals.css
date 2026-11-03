@@ -253,3 +253,298 @@ html:not(.dark) body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: multiply;
 }
+
+/* ========================================================
+   9. 天气卡片动画（随天气类型切换场景）
+   --------------------------------------------------------
+   .wx-scene 容器绝对定位铺满天气卡，所有子元素默认隐藏，
+   由 .wx-scene-<kind> 控制显隐与运动。
+   ======================================================== */
+.wx-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wx-scene > * {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* --- 太阳光晕（晴） --- */
+.wx-scene .wx-orb {
+  top: -22%;
+  right: -10%;
+  width: 320px;
+  height: 320px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 196, 120, 0.42) 0%, rgba(255, 196, 120, 0.14) 42%, transparent 70%);
+  filter: blur(6px);
+}
+.wx-scene-clear .wx-orb {
+  opacity: 1;
+  animation: wx-orb-pulse 7s ease-in-out infinite;
+}
+@keyframes wx-orb-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+/* --- 飘动的云（多云 / 阴 / 雨 / 雪） --- */
+.wx-scene .wx-cloud {
+  height: 110px;
+  border-radius: 9999px;
+  background: radial-gradient(60% 100% at 30% 40%, rgba(255, 255, 255, 0.85), transparent 70%),
+    radial-gradient(60% 100% at 70% 55%, rgba(255, 255, 255, 0.72), transparent 70%);
+  filter: blur(10px);
+}
+.wx-scene .wx-cloud-1 { width: 260px; top: 12%; left: -30%; }
+.wx-scene .wx-cloud-2 { width: 190px; top: 30%; left: -30%; opacity: 0 !important; }
+.wx-scene-cloud .wx-cloud-1,
+.wx-scene-rain .wx-cloud-1,
+.wx-scene-storm .wx-cloud-1,
+.wx-scene-snow .wx-cloud-1,
+.wx-scene-fog .wx-cloud-1 {
+  opacity: 0.75;
+  animation: wx-drift 26s linear infinite;
+}
+.wx-scene-cloud .wx-cloud-2,
+.wx-scene-rain .wx-cloud-2,
+.wx-scene-storm .wx-cloud-2,
+.wx-scene-snow .wx-cloud-2,
+.wx-scene-fog .wx-cloud-2 {
+  opacity: 0.45;
+  animation: wx-drift 38s linear infinite;
+}
+@keyframes wx-drift {
+  from { transform: translateX(-20%) translateY(0); }
+  50%  { transform: translateX(40%) translateY(-14px); }
+  to   { transform: translateX(190%) translateY(0); }
+}
+
+/* --- 雨滴 --- */
+.wx-scene .wx-drop {
+  top: -12%;
+  width: 2px;
+  height: 46px;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom, rgba(120, 165, 205, 0), rgba(120, 165, 205, 0.75));
+}
+.wx-scene-rain .wx-drop,
+.wx-scene-storm .wx-drop {
+  opacity: 1;
+  animation: wx-fall 1.5s linear infinite;
+}
+.wx-scene .wx-drop-1 { left: 14%; animation-delay: 0s !important; }
+.wx-scene .wx-drop-2 { left: 38%; animation-delay: 0.45s !important; }
+.wx-scene .wx-drop-3 { left: 66%; animation-delay: 0.9s !important; }
+@keyframes wx-fall {
+  0%   { transform: translateY(-10%); opacity: 0; }
+  12%  { opacity: 1; }
+  100% { transform: translateY(520px); opacity: 0; }
+}
+
+/* --- 雪花 --- */
+.wx-scene .wx-flake {
+  top: -8%;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+}
+.wx-scene-snow .wx-flake {
+  opacity: 1;
+  animation: wx-snowfall 6s linear infinite;
+}
+.wx-scene .wx-flake-1 { left: 22%; animation-delay: 0s !important; }
+.wx-scene .wx-flake-2 { left: 58%; animation-delay: 2.4s !important; }
+@keyframes wx-snowfall {
+  0%   { transform: translateY(-6%) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translateY(260px) translateX(26px); }
+  100% { transform: translateY(520px) translateX(-18px); opacity: 0; }
+}
+
+/* --- 雾霾：横向淡雾条 --- */
+.wx-scene-fog .wx-orb {
+  opacity: 0.5;
+  background: radial-gradient(circle, rgba(190, 190, 190, 0.4) 0%, transparent 70%);
+}
+
+/* --- 图标轻微浮动 --- */
+.wx-icon {
+  animation: wx-float 5s ease-in-out infinite;
+}
+@keyframes wx-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* 尊重系统的「减少动态效果」设置 */
+@media (prefers-reduced-motion: reduce) {
+  .wx-scene > *,
+  .wx-icon { animation: none !important; }
+  .wx-scene .wx-orb { opacity: 0.6; }
+}
+
+/* ========================================================
+   10. 正文阅读舒适宽度 + 行距
+   --------------------------------------------------------
+   移动端一行文字过长很难读，这里给正文加最大行宽与行高。
+   ======================================================== */
+.article-body {
+  max-width: 42rem;      /* 中文正文约 38-42 汉字一行最舒适 */
+  margin-inline: auto;
+  line-height: 1.95;
+  font-size: 1.02rem;
+  letter-spacing: 0.012em;
+}
+@media (min-width: 1024px) {
+  .article-body { font-size: 1.06rem; }
+}
+.article-body p { margin-block: 1.15em; }
+.article-body h2,
+.article-body h3,
+.article-body h4 { scroll-margin-top: 110px; line-height: 1.45; }
+.article-body img {
+  border-radius: 18px;
+  box-shadow: 0 18px 40px -26px rgba(16, 16, 22, 0.5);
+  max-width: 100%;
+  height: auto;
+}
+.article-body blockquote {
+  border-left: 3px solid #b4613a;
+  background: rgba(180, 97, 58, 0.06);
+  border-radius: 0 14px 14px 0;
+  padding: 0.9em 1.2em;
+}
+.article-body table { display: block; overflow-x: auto; width: 100%; }
+.article-body code:not(pre code) {
+  background: rgba(180, 97, 58, 0.10);
+  color: #8a3f22;
+  padding: 0.15em 0.42em;
+  border-radius: 6px;
+  font-size: 0.88em;
+}
+html.dark .article-body code:not(pre code) {
+  background: rgba(255, 255, 255, 0.10);
+  color: #f0c9a8;
+}
+
+/* ========================================================
+   11. 代码块增强：复制按钮 + 行号条
+   ======================================================== */
+.code-block {
+  position: relative;
+  margin-block: 1.6em;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.code-block pre {
+  margin: 0;
+  padding: 1.15em 1.25em;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.75;
+}
+.code-block pre code { display: block; }
+.code-copy-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 9999px;
+  padding: 0.28rem 0.7rem;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.code-copy-btn:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.code-copy-btn[data-copied="true"] { background: #2f9e6b; border-color: transparent; color: #fff; }
+
+/* ========================================================
+   12. 阅读进度条
+   ======================================================== */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  z-index: 9998;
+  background: linear-gradient(90deg, #b4613a, #d99a5b, #b4613a);
+  box-shadow: 0 0 10px rgba(180, 97, 58, 0.45);
+  transition: width 0.1s linear;
+}
+
+/* ========================================================
+   13. 懒加载渐入动画
+   ======================================================== */
+.fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lazy-img {
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.lazy-img[data-loaded="true"] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ========================================================
+   14. 面包屑
+   ======================================================== */
+.breadcrumb-item::after {
+  content: "/";
+  margin: 0 0.5rem;
+  color: rgba(138, 115, 96, 0.6);
+}
+.breadcrumb-item:last-child::after { content: ""; margin: 0; }
+
+/* ========================================================
+   15. 夜空主题：降低大面积动画，避免低端手机掉帧
+   --------------------------------------------------------
+   深色模式下背景渐变、粒子与光晕会同时跑，
+   这里统一降速/降透明，低端机也能保持流畅。
+   ======================================================== */
+html.dark body::after { opacity: 0.02; }
+
+html.dark [style*="gradientMove"] {
+  animation-duration: 32s !important;
+}
+
+html.dark .animate-pulse { animation-duration: 3s !important; }
+
+@media (max-width: 768px) {
+  /* 手机端整体收紧动画时长 */
+  .animate-fade-in-up,
+  .animate-fade-in { animation-duration: 0.35s !important; }
+  [class*="animate-spin"] { animation-duration: 2.4s !important; }
+}
+
+/* 超低性能设备（通过 prefers-reduced-motion 表达）进一步降级 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-pulse,
+  .animate-spin { animation: none !important; }
+}

@@ -13,6 +13,7 @@ import GlobalToolbox from "../components/GlobalToolbox";
 import SplashScreen from "../components/SplashScreen";
 import CyberCat from '../components/CyberCat';
 import DanmakuBackground from '../components/DanmakuBackground';
+import Analytics from '../components/Analytics';
 
 import MobileBackButton from '../components/MobileBackButton';
 
@@ -26,12 +27,30 @@ const notoSerif = Noto_Serif_SC({
   display: 'swap',
 });
 
+const BASE_PATH = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/+$/, '');
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://f-grze.github.io').replace(/\/+$/, '');
+
 export const metadata: Metadata = {
   title: siteConfig.title,
   description: siteConfig.bio,
   icons: {
     icon: siteConfig.faviconUrl,
     apple: siteConfig.faviconUrl,
+  },
+  alternates: {
+    canonical: `${SITE_URL}${BASE_PATH}/`,
+    types: {
+      'application/rss+xml': [{ url: `${SITE_URL}${BASE_PATH}/rss.xml`, title: `${siteConfig.title} · RSS` }],
+    },
+  },
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.bio,
+    url: `${SITE_URL}${BASE_PATH}/`,
+    siteName: siteConfig.title,
+    locale: 'zh_CN',
+    type: 'website',
+    images: [`${SITE_URL}${BASE_PATH}${siteConfig.defaultPostCover}`],
   },
 };
 
@@ -64,6 +83,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
       <body className="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif">
         <ThemeProvider>
+
+          <Analytics />
 
           <SplashScreen />
 

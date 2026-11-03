@@ -1,5 +1,6 @@
 ---
 title: "浅色主题的重构：纸感、墨线与一点点黄铜"
+category: "设计"
 date: "2026-10-26 01:40:00"
 description: "从 Tailwind 的色板变量下手，把整套高饱和配色收成两个点缀色。"
 cover: "/media/img-09.webp"

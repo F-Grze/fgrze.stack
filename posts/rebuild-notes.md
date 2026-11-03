@@ -1,5 +1,6 @@
 ---
 title: "把一份 Next.js 博客复刻到 90%：做法与取舍"
+category: "技术"
 date: "2026-10-28 22:10:00"
 description: "从别人的开源模板出发，保留结构、重做视觉，把深色玻璃换成纸白与墨线。"
 cover: "/media/img-02.webp"

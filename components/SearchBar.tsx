@@ -39,7 +39,22 @@ const Highlight = ({ text = '', query = '' }) => {
   );
 };
 
-export default function SearchBar({ posts = [] }: { posts: Post[] }) {
+export interface AlbumHit {
+  id: string;
+  title: string;
+  description?: string;
+  cover?: string;
+  photoCount?: number;
+  group?: string;
+}
+
+export default function SearchBar({
+  posts = [],
+  albums = [],
+}: {
+  posts: Post[];
+  albums?: AlbumHit[];
+}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,6 +81,20 @@ export default function SearchBar({ posts = [] }: { posts: Post[] }) {
       return titleMatch || descMatch || tagMatch;
     });
   }, [searchQuery, posts]);
+
+  // 相册 / 照片标题也纳入站内搜索
+  const albumResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    return albums.filter(
+      (a) =>
+        (a.title || '').toLowerCase().includes(query) ||
+        (a.description || '').toLowerCase().includes(query) ||
+        (a.group || '').toLowerCase().includes(query),
+    );
+  }, [searchQuery, albums]);
+
+  const hasResults = searchResults.length > 0 || albumResults.length > 0;
 
   return (
     <div className="relative w-full max-w-2xl mx-auto mb-10 z-[100]" ref={containerRef}>
@@ -114,8 +143,45 @@ export default function SearchBar({ posts = [] }: { posts: Post[] }) {
             transition={{ duration: 0.2 }}
             className="absolute top-full left-0 right-0 mt-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl border border-white/50 dark:border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden max-h-[450px] overflow-y-auto z-20"
           >
-            {searchResults.length > 0 ? (
+            {hasResults ? (
               <div className="flex flex-col py-3">
+                {albumResults.length > 0 && (
+                  <>
+                    <p className="px-6 pt-1 pb-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#B4613A]">
+                      相册 ({albumResults.length})
+                    </p>
+                    {albumResults.map((album) => (
+                      <Link
+                        href="/photowall"
+                        key={`album-${album.id}`}
+                        onClick={() => setIsOpen(false)}
+                        className="px-6 py-4 hover:bg-indigo-50/80 dark:hover:bg-indigo-500/10 transition-colors group border-b border-slate-100/50 dark:border-slate-800/50 flex items-center gap-4"
+                      >
+                        <div className="h-12 w-16 flex-none overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
+                          {album.cover && (
+                            <img src={album.cover} alt="" className="h-full w-full object-cover" />
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-base font-bold text-slate-800 dark:text-slate-200 line-clamp-1">
+                            <Highlight text={album.title} query={searchQuery} />
+                          </h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                            {album.description}
+                          </p>
+                        </div>
+                        <span className="shrink-0 text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
+                          {album.photoCount ?? 0} 张
+                        </span>
+                      </Link>
+                    ))}
+                    {searchResults.length > 0 && (
+                      <p className="px-6 pt-3 pb-2 text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500">
+                        文章 ({searchResults.length})
+                      </p>
+                    )}
+                  </>
+                )}
                 {searchResults.map((post) => (
                   <Link
                     href={`/posts/${post.slug}`}

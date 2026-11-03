@@ -46,6 +46,16 @@ fi
 
 export NEXT_PUBLIC_BASE_PATH="$BASE_PATH"
 
+# 站点根地址（默认 GitHub Pages 用户主页域名），只用于 RSS / sitemap / canonical
+export NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-https://f-grze.github.io}"
+
+# 静态托管没有 API Route，天气页需要跨域调用「已部署的代理」。
+# 构建时传入 NEXT_PUBLIC_WEATHER_API_BASE（例如 Vercel 或 Cloudflare Worker 地址），
+# 前端就会去那个代理取数据，Key 依然只留在服务端。
+if [ -n "${NEXT_PUBLIC_WEATHER_API_BASE:-}" ]; then
+  echo "ℹ️ 天气代理地址：$NEXT_PUBLIC_WEATHER_API_BASE"
+fi
+
 BACKUP_DIR=".static-backup"
 rm -rf "$BACKUP_DIR" out
 # 清掉上一次构建缓存：basePath 变化时残留的 .next 会让构建失败或产出错误路径

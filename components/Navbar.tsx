@@ -54,7 +54,15 @@ export default function Navbar() {
   }, [isMobileMenuOpen, rawRotation]);
 
   // 控制 PC 端导航栏
+  // 文章页（/posts/*）保持常驻，方便长文阅读时随时跳转；
+  // 其它页面仍然保持「向下滚动隐藏、向上滚回显示」的经典交互。
+  const isArticlePage = pathname?.startsWith('/posts');
+
   useEffect(() => {
+    if (isArticlePage) {
+      setShowNav(true);
+      return;
+    }
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY && currentScrollY > 80) {
@@ -66,7 +74,7 @@ export default function Navbar() {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isArticlePage]);
 
   const navLinks = [
     { name: '首页', href: '/' },

@@ -5,10 +5,20 @@ import TimelineNode from './TimelineNode';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, LayoutGrid, ListTree, Calendar, Hash, ArrowUp } from 'lucide-react';
 import Link from 'next/link';
+import OptimizedImage from './OptimizedImage';
 
-export default function TimelineClient({ posts: initialPosts, tags }: { posts: any[], tags: { name: string, count: number }[] }) {
+export default function TimelineClient({
+  posts: initialPosts,
+  tags,
+  categories = [],
+}: {
+  posts: any[];
+  tags: { name: string; count: number }[];
+  categories?: { name: string; count: number }[];
+}) {
   const [posts, setPosts] = useState(initialPosts);
   const [selectedTag, setSelectedTag] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -44,6 +54,17 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // 从 /timeline?tag=xxx 进入时自动选中对应标签
+  // （静态导出下用 window.location 读，避免 useSearchParams 触发动态渲染）
+  useEffect(() => {
+    try {
+      const t = new URLSearchParams(window.location.search).get('tag');
+      if (t) setSelectedTag(t);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
@@ -55,9 +76,11 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
 
   const timelinePosts = useMemo(() => {
     return posts.filter(post => {
-      return selectedTag === 'All' || post.tags?.includes(selectedTag);
+      const tagOk = selectedTag === 'All' || post.tags?.includes(selectedTag);
+      const catOk = selectedCategory === 'All' || post.category === selectedCategory;
+      return tagOk && catOk;
     });
-  }, [posts, selectedTag]);
+  }, [posts, selectedTag, selectedCategory]);
 
   const handleGridScroll = () => {
     if (gridScrollRef.current) {
@@ -143,6 +166,34 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
           </AnimatePresence>
         </div>
 
+        {categories.length > 0 && (
+          <div className="w-full flex flex-wrap justify-center gap-2">
+            <button
+              onClick={() => setSelectedCategory('All')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
+                selectedCategory === 'All'
+                  ? 'bg-slate-900 text-white shadow-md dark:bg-white dark:text-slate-900'
+                  : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-white'
+              }`}
+            >
+              全部分类
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.name}
+                onClick={() => setSelectedCategory(c.name)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
+                  selectedCategory === c.name
+                    ? 'bg-slate-900 text-white shadow-md dark:bg-white dark:text-slate-900'
+                    : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-white'
+                }`}
+              >
+                {c.name} <span className="opacity-50 ml-1">{c.count}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 bg-white/30 dark:bg-slate-800/30 backdrop-blur-md p-4 rounded-3xl border border-white/20 dark:border-white/5">
           <div className="flex flex-wrap justify-center md:justify-start gap-2 flex-1">
             <button onClick={() => setSelectedTag('All')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${selectedTag === 'All' ? 'bg-indigo-500 text-white shadow-md' : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-white'}`}>
@@ -203,12 +254,23 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
                       <Link href={`/posts/${post.slug}`} className="block flex-1 flex flex-col cursor-pointer">
                         {/* 🌟 图片高度自适应：手机变矮，电脑变高 */}
                         <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
-                          <img src={post.cover} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                          <OptimizedImage
+                            src={post.cover}
+                            alt={post.title}
+                            fill
+                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 30vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                           {/* 🌟 日期标签微缩 */}
                           <span className="absolute bottom-2 left-2 md:bottom-3 md:left-4 text-white/90 text-[9px] md:text-xs font-mono font-bold bg-black/40 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 rounded flex items-center gap-1">
                             <Calendar size={10} className="md:w-3 md:h-3"/> {post.date.split(' ')[0]}
                           </span>
+                          {post.category && (
+                            <span className="absolute top-2 left-2 md:top-3 md:left-4 text-white text-[9px] md:text-[10px] font-black bg-black/45 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 rounded">
+                              {post.category}
+                            </span>
+                          )}
                         </div>
 
                         {/* 🌟 文本边距和字号全方位缩放 */}

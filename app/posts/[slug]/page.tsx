@@ -23,6 +23,10 @@ import ClientTOC from '../../../components/ClientTOC';
 import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
 import SidebarLyric from '../../../components/SidebarLyric';
+import ReadingProgress from '../../../components/ReadingProgress';
+import Breadcrumb from '../../../components/Breadcrumb';
+import CodeCopyButtons from '../../../components/CodeCopyButtons';
+import OptimizedImage from '../../../components/OptimizedImage';
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'posts');
@@ -120,6 +124,7 @@ async function getPostData(slug: string) {
     title: data.title,
     date: data.date,
     tags: data.tags && Array.isArray(data.tags) ? data.tags : [],
+    category: typeof data.category === 'string' ? data.category : '技术',
     cover: data.cover || siteConfig.defaultPostCover
   };
 }
@@ -145,18 +150,37 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
   return (
     <div className="min-h-screen relative pb-20">
       <Navbar />
+      <ReadingProgress />
+      <CodeCopyButtons />
       <PageTransition>
         <main className="w-[95%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28 flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10">
 
           <article className="flex-1 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden transition-colors duration-700">
-            <div className="w-full aspect-video bg-slate-200 dark:bg-slate-700 relative group">
-              <img src={postData.cover} alt="封面" className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
+            <div className="w-full aspect-video bg-slate-200 dark:bg-slate-700 relative group overflow-hidden">
+              <OptimizedImage
+                src={postData.cover}
+                alt={`${postData.title} 封面`}
+                fill
+                priority
+                sizes="(max-width: 1024px) 95vw, 900px"
+                className="object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105"
+              />
             </div>
 
             <div className="p-5 md:p-12 relative">
               <BackButton />
 
               <header className="mb-6 md:mb-8 border-b border-slate-300/50 dark:border-slate-700 pb-5 md:pb-6 relative">
+                <div className="mb-4">
+                  <Breadcrumb
+                    items={[
+                      { label: '首页', href: '/' },
+                      { label: '归档', href: '/timeline' },
+                      { label: postData.category },
+                      { label: postData.title },
+                    ]}
+                  />
+                </div>
                 <h1 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight transition-colors duration-700 pr-16 md:pr-24 leading-snug">
                   {postData.title}
                 </h1>
@@ -169,10 +193,21 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                     写作时间：{postData.date}
                   </div>
 
+                  <div className="flex items-center gap-1 text-[#B4613A] dark:text-amber-300 font-bold bg-white/30 dark:bg-slate-900/50 px-2.5 md:px-3 py-1.5 md:py-2 rounded-full text-xs md:text-sm transition-colors duration-700 shadow-sm border border-white/20 dark:border-white/5">
+                    <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h18M3 12h18M3 17h10" />
+                    </svg>
+                    {postData.category}
+                  </div>
+
                   {postData.tags.map((tag: string) => (
-                    <div key={tag} className="flex items-center gap-1 text-pink-600 dark:text-pink-400 font-bold bg-white/30 dark:bg-slate-900/50 px-2.5 md:px-3 py-1.5 md:py-2 rounded-full text-xs md:text-sm transition-colors duration-700 shadow-sm border border-white/20 dark:border-white/5">
+                    <Link
+                      key={tag}
+                      href={`/timeline?tag=${encodeURIComponent(tag)}`}
+                      className="flex items-center gap-1 text-pink-600 dark:text-pink-400 font-bold bg-white/30 dark:bg-slate-900/50 px-2.5 md:px-3 py-1.5 md:py-2 rounded-full text-xs md:text-sm transition-colors duration-700 shadow-sm border border-white/20 dark:border-white/5 hover:bg-white/60 hover:underline"
+                    >
                       <span className="text-[10px] md:text-xs opacity-70">#</span> {tag}
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </header>
@@ -288,7 +323,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
 
                 <div
                   id="article-content"
-                  className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none text-slate-800 dark:text-slate-200 transition-colors duration-700 scroll-smooth"
+                  className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none article-body text-slate-800 dark:text-slate-200 transition-colors duration-700 scroll-smooth"
                   dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
                 />
               </div>
