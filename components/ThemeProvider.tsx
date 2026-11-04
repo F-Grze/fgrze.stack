@@ -1,40 +1,30 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const ThemeContext = createContext({ isDark: false, toggleTheme: () => {} });
+const ThemeContext = createContext({ isDark: true, toggleTheme: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // 默认设为 false（浅色），这样在读取到配置前，如果是浅色模式就不会闪烁
-  const [isDark, setIsDark] = useState(false);
+  // 默认夜色（花谷主题）。首帧的 html.dark 由布局 head 里的内联脚本同步加上，
+  // 这里保持同样的默认值，避免 hydration 后出现一次「闪白」。
+  const [isDark, setIsDark] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // 标记组件已挂载，避免 hydration 报错
     setMounted(true);
 
-    // 从 localStorage 读取真实状态
     const savedTheme = localStorage.getItem('blog-theme');
-    // 如果没有记录，默认给浅色模式（纸感背景 + 深色点缀）
-    const isDarkMode = savedTheme === 'dark';
+    // 只有明确选过浅色才切走，其余（未设置 / dark）都留在夜色
+    const isDarkMode = savedTheme !== 'light';
     setIsDark(isDarkMode);
 
     const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    root.classList.toggle('dark', isDarkMode);
   }, []);
 
-  // 极其重要：监听 isDark 状态，只要它变了，立刻强制更新 html 标签，防止路由切换丢失
+  // 监听 isDark 状态，只要它变了，立刻强制更新 html 标签，防止路由切换丢失
   useEffect(() => {
     if (!mounted) return;
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', isDark);
   }, [isDark, mounted]);
 
   const toggleTheme = () => {
@@ -43,11 +33,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('blog-theme', newDark ? 'dark' : 'light');
   };
 
-  // 在客户端挂载完成前，为了防止闪屏，先隐藏内容
-  if (!mounted) {
-    return <div className="invisible">{children}</div>;
-  }
-
+  // 不再在挂载前隐藏内容。
+  // 早期版本用 `invisible` 等 hydration，脚本一慢整页就是空白 —— 与「内容默认可见」
+  // 的渐进增强原则冲突。主题只影响 html 上的类名，不存在结构差异，可以直接渲染。
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       {children}

@@ -68,6 +68,46 @@ html.dark {
   --color-pink-400: #f472b6;
   --color-pink-500: #ec4899;
   --color-pink-600: #db2777;
+
+  /* ---- 夜色花谷：暖黑 + 奶油 ----
+     深色模式下把整条 slate 冷灰换成与花谷同源的墨绿黑，
+     页面才不会像「套了层蓝灰暗黑模式」，而是站在谷地里。 */
+  --color-slate-950: #04070a;
+  --color-slate-900: #080d0a;
+  --color-slate-800: #11150f;
+  --color-slate-700: #1a1f16;
+  --color-slate-600: #272d20;
+  --color-slate-500: #46503d;
+  --color-slate-400: #98a28b;
+  --color-slate-300: #b3b8a8;
+  --color-slate-200: #ded9c9;
+  --color-slate-100: #f1ebdc;
+  --color-slate-50: #f7f2e6;
+
+  /* 霓虹色一并收成黄铜 / 苔绿，避免深色页面上蹦出高饱和紫粉 */
+  --color-indigo-400: #d9a97c;
+  --color-indigo-500: #b4613a;
+  --color-indigo-600: #8a4a2c;
+  --color-purple-400: #b9c4a4;
+  --color-purple-500: #8f9a72;
+  --color-purple-600: #6d7757;
+  --color-pink-400: #d8a877;
+  --color-pink-500: #bc8a5c;
+
+  /* 夜色下的「白」= 奶油 #f5efe2：正文、描边、浅色块一起变暖，
+     否则纯白会和暖黑背景互相打架。 */
+  --color-white: #f6f0e3;
+}
+
+/* 花谷画布：铺满、不参与命中测试 */
+.nv-canvas {
+  position: absolute;
+  inset: 0;
+  /* 必须低于 .site-veil（-9），否则纱罩会被画布盖住 */
+  z-index: -10;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* 背景轮播：把高对比的涂鸦稿压成浅调纸感，并保留一点推近动效 */
@@ -93,12 +133,17 @@ html.dark {
   100% { transform: scale(1.1); }
 }
 
-/* 全屏柔光罩：浅色模式下把涂鸦压成米白纸面，暗色模式下恢复深色玻璃 */
+/* 全屏纱罩：
+   夜色模式只压暗、不上色，让花谷在内容之下仍然可辨；
+   纸白模式则把谷地雾化成晨雾，保留浅色阅读体验。 */
 .site-veil {
-  background: linear-gradient(180deg, rgba(250, 248, 243, 0.40) 0%, rgba(247, 245, 239, 0.24) 45%, rgba(242, 240, 233, 0.42) 100%);
+  background:
+    linear-gradient(180deg, rgba(246, 243, 236, 0.945) 0%, rgba(244, 241, 234, 0.925) 45%, rgba(240, 237, 229, 0.95) 100%);
 }
 html.dark .site-veil {
-  background: rgba(2, 6, 23, 0.58);
+  background:
+    radial-gradient(140% 100% at 50% 46%, rgba(4, 7, 6, 0) 0%, rgba(3, 6, 5, 0.06) 52%, rgba(2, 4, 4, 0.36) 100%),
+    linear-gradient(180deg, rgba(2, 4, 6, 0.18) 0%, rgba(3, 6, 5, 0.02) 42%, rgba(2, 4, 4, 0.26) 100%);
 }
 
 /* 2. 基础环境与性能优化 */
@@ -182,11 +227,17 @@ input[type=range]::-webkit-slider-thumb {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(180, 97, 58, 0.28);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.8);
+  background: rgba(180, 97, 58, 0.65);
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(245, 239, 226, 0.16);
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 239, 226, 0.34);
 }
 
 /* ========================================================
@@ -194,7 +245,10 @@ input[type=range]::-webkit-slider-thumb {
    ======================================================== */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+  scrollbar-color: rgba(180, 97, 58, 0.28) transparent;
+}
+html.dark * {
+  scrollbar-color: rgba(245, 239, 226, 0.18) transparent;
 }
 
 /* ========================================================
@@ -238,6 +292,33 @@ html:not(.dark) .text-slate-700 { color: #3a3a44; }
 html:not(.dark) ::selection {
   background: #14141a;
   color: #f7f5ef;
+}
+
+/* ========================================================
+   7.2 夜色表面：深色卡片提到 72–84% 不透明
+   --------------------------------------------------------
+   花谷是动的，玻璃卡如果只有 50% 不透明，背后的光点会从文字里透出来。
+   提到 72% 既保留「浮在谷地上」的通透，又不牺牲可读性。
+   ======================================================== */
+html.dark [class*="bg-slate-800/50"] { background-color: rgba(21, 25, 18, 0.82) !important; }
+html.dark [class*="bg-slate-800/60"] { background-color: rgba(21, 25, 18, 0.86) !important; }
+html.dark [class*="bg-slate-800/80"] { background-color: rgba(21, 25, 18, 0.92) !important; }
+html.dark [class*="bg-slate-900/60"] { background-color: rgba(9, 12, 9, 0.84) !important; }
+html.dark [class*="bg-slate-900/70"] { background-color: rgba(9, 12, 9, 0.88) !important; }
+html.dark [class*="border-white/10"] { border-color: rgba(246, 240, 227, 0.15) !important; }
+html.dark [class*="border-white/5"] { border-color: rgba(246, 240, 227, 0.08) !important; }
+
+/* 卡片顶沿一道极细的高光，让玻璃面在黑底上「立」起来 */
+html.dark .shadow-xl {
+  box-shadow: 0 30px 70px -42px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(246, 240, 227, 0.07) !important;
+}
+html.dark .shadow-2xl {
+  box-shadow: 0 40px 90px -50px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(246, 240, 227, 0.08) !important;
+}
+
+html.dark ::selection {
+  background: #f5efe2;
+  color: #10130d;
 }
 
 /* ========================================================
@@ -584,7 +665,7 @@ html[data-tab-hidden='true'] *::after {
   box-shadow: 0 10px 40px rgba(120, 86, 54, 0.08);
 }
 html.dark .wx-card {
-  background-color: rgba(30, 41, 59, 0.88);
+  background-color: rgba(21, 25, 18, 0.90);
   border-color: rgba(255, 255, 255, 0.1);
 }
 @media (min-width: 768px) {
@@ -594,7 +675,7 @@ html.dark .wx-card {
     backdrop-filter: blur(10px);
   }
   html.dark .wx-card {
-    background-color: rgba(30, 41, 59, 0.62);
+    background-color: rgba(21, 25, 18, 0.78);
   }
 }
 
@@ -607,7 +688,7 @@ html.dark .wx-card {
   box-shadow: 0 6px 20px rgba(120, 86, 54, 0.06);
 }
 html.dark .wx-card-flat {
-  background-color: rgba(30, 41, 59, 0.9);
+  background-color: rgba(24, 28, 20, 0.92);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -620,3 +701,17 @@ html.dark .wx-card-flat {
   }
 }
 
+
+/* ========================================================
+   18. 页面入场：纯 CSS，保证无 JS 也完整可见
+   ======================================================== */
+.page-enter {
+  animation: page-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter { animation: none; }
+}

@@ -110,7 +110,12 @@ export default function SearchBar({
             setSearchQuery(e.target.value);
             setIsOpen(true);
           }}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => {
+            setIsOpen(true);
+            // 聚焦搜索时让花谷缓停、花群散开：把注意力交给输入框
+            (window as any).__valley?.hover(true);
+          }}
+          onBlur={() => (window as any).__valley?.hover(false)}
           autoComplete="off"
           spellCheck="false"
         />
