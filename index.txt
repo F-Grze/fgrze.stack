@@ -1,0 +1,233 @@
+1:"$Sreact.fragment"
+2:I[80492,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"ThemeProvider"]
+3:I[28977,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+4:I[61452,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+5:I[15559,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+6:I[79674,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"MusicProvider"]
+7:I[24566,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+8:I[40992,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+9:I[57256,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+14:I[38344,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default",1]
+:HL["/fgrze.stack/_next/static/chunks/0tmg9vcbw.fm2.css","style"]
+:HL["/fgrze.stack/_next/static/chunks/0s1b_h0y6abo4.css","style"]
+:HL["/fgrze.stack/_next/static/chunks/046ite0-1-t.f.css","style"]
+:HL["/fgrze.stack/_next/static/chunks/04kl_3uhzp-tw.css","style"]
+:HC["/",""]
+0:{"P":null,"c":["",""],"q":"","i":false,"f":[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",16],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/0tmg9vcbw.fm2.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/0s1b_h0y6abo4.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/046ite0-1-t.f.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/04kl_3uhzp-tw.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"dark geist_967664a6-module__4K9MCG__variable geist_mono_5ce8c3f-module__SSBbPG__variable noto_serif_sc_ca92a440-module__QEbJEq__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 1; visibility: visible; pointer-events: auto; }\n              @media (prefers-reduced-motion: no-preference) {\n                #app-mount-root { animation: app-reveal 0.7s ease-out both; }\n              }\n              @keyframes app-reveal {\n                from { opacity: 0; transform: translateY(8px); }\n                to   { opacity: 1; transform: none; }\n              }\n            "}}],["$","script",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              try {\n                // 服务端已经把 dark 写在 html 上，这里只在访客主动选过「纸白」时摘掉\n                var t = localStorage.getItem('blog-theme');\n                if (t === 'light') document.documentElement.classList.remove('dark');\n              } catch (e) {}\n            "}}],["$","script",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-skip');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","$L6",null,{"children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden bg-[#05070a]","children":[["$","$L7",null,{}],["$","div",null,{"className":"site-veil absolute inset-0 z-[-9] transition-colors duration-1000"}]]}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col transition-opacity duration-1000","children":[["$","div",null,{"className":"relative z-10 flex-1 flex flex-col","children":["$","$L8",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L9",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],"$La","$Lb"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Lc","$Ld","$Le","$Lf"]}],"$L10"]}],"$L11"]}]}]]}]]}],{"children":["$L12",{},null,false,null]},null,false,null],"$L13",false]],"m":"$undefined","G":["$14",["$L15","$L16","$L17","$L18"]],"S":true,"h":null,"s":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"JAiKZzgkzvMpUzmMQr0QQ"}
+19:I[94909,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+1a:I[43173,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+1b:I[38197,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+1c:I[60567,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+1d:I[92471,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"default"]
+1e:I[26015,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"ToastProvider"]
+1f:I[62319,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+20:I[66357,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+21:I[69950,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+22:I[55183,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+23:I[5562,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+24:I[39470,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+25:I[36653,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+2d:I[64156,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"ViewportBoundary"]
+2f:I[64156,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"MetadataBoundary"]
+30:"$Sreact.suspense"
+a:["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}]
+b:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+c:["$","div",null,{"className":"hidden md:block","children":["$","$L19",null,{}]}]
+d:["$","div",null,{"className":"hidden md:block","children":["$","$L1a",null,{}]}]
+e:["$","div",null,{"className":"md:hidden block","children":["$","$L1b",null,{}]}]
+f:["$","div",null,{"className":"hidden md:block","children":["$","$L1c",null,{}]}]
+10:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientDrift {\n                from { transform: translate3d(-5%, -3%, 0) rotate(0deg) scale(1.15); }\n                to   { transform: translate3d(5%, 3%, 0) rotate(2.5deg) scale(1.28); }\n              }\n            "}}]
+11:["$","div",null,{"className":"hidden lg:block","children":["$","$L1d",null,{}]}]
+26:T1c67,
+做机器学习的人大概都熟悉这种场景：模型跑得比实验快，于是你开始怀疑它到底学到了什么。而做分子模拟的人刚好反过来——实验跑得太慢，慢到只能截取其中一小段，问模型能不能替我把剩下的一段补完。
+
+这篇笔记记录我最近在做的这件事：拿一个简化版的小体系（几个粒子 + 一个粗糙的势能面）当数据源，训一个图神经网络，让它同时输出下一时刻的坐标和力，然后在轨迹对比里看它到底像不像。
+
+## 先说清楚为什么是图
+
+分子体系的自然表示就是图：
+
+- **节点** = 原子，特征是元素种类、部分电荷、所属残基、空间位置；
+- **边** = 原子对，作用半径 cutoff 之内连边，特征是距离、距离的径向基展开（RBF）、方向余弦；
+- **全局特征** = 体系温度、总能量、盒子尺寸。
+
+关键在于置换等变性：两个原子互换编号，物理上不应该有任何区别。所有消息传递的层数堆得再深，也只是让每个原子的表示依赖于它的邻域，而邻域本身又被规范成度数归一化的形式。
+
+```python
+import torch
+import torch.nn as nn
+
+
+class MessagePassing(nn.Module):
+    """单层消息传递：边上的标量消息聚合到节点上。"""
+
+    def __init__(self, hidden: int, cutoff: float = 5.0):
+        super().__init__()
+        self.cutoff = cutoff
+        # 边 MLP：RBF 展开 -> 消息
+        self.edge_mlp = nn.Sequential(
+            nn.Linear(hidden, hidden),
+            nn.SiLU(),
+            nn.Linear(hidden, hidden),
+        )
+        # 节点更新 MLP
+        self.node_mlp = nn.Sequential(
+            nn.Linear(hidden * 2, hidden),
+            nn.SiLU(),
+            nn.Linear(hidden, hidden),
+        )
+
+    def forward(self, x, edge_index, edge_attr, edge_vec, batch):
+        """x: [N, H]  节点特征
+        edge_index: [2, E]  边索引
+        edge_attr: [E, H]  边特征（已做 RBF 展开）
+        edge_vec: [E, 3]  单位方向向量
+        """
+        src, dst = edge_index
+        message = self.edge_mlp(edge_attr)
+
+        # 按目标节点聚合（sum），并做度数归一化
+        agg = torch.zeros_like(x)
+        agg.index_add_(0, dst, message)
+        deg = torch.zeros(x.size(0), device=x.device, dtype=x.dtype)
+        deg.index_add_(0, dst, torch.ones_like(dst, dtype=x.dtype))
+        agg = agg / (deg.unsqueeze(-1) + 1.0)
+
+        # 方向信息：沿边方向把消息再分一份给源节点
+        dir_msg = agg[src] * edge_vec
+
+        out = self.node_mlp(torch.cat([x, agg + dir_msg], dim=-1))
+        return out + x  # 残差连接，训练更稳
+```
+
+## 邻居列表是最容易出错的地方
+
+我在这上面踩过一次很典型的坑：推理时用的 cutoff 比训练时大 0.1 Å，误差直接翻了四倍。原因不玄学——**图的边集变了**。模型学到的是"在这个邻域结构下的更新规则"，你把边集换掉，等于把问题换掉了。
+
+所以训练和推理必须共用同一套建图逻辑，并且这个逻辑要写在 Dataset 里，而不是散落在训练脚本里。
+
+```python
+import numpy as np
+
+
+def build_neighbor_list(positions, cutoff=5.0, max_neighbors=32, cell=None):
+    """周期性边界下的邻居列表。
+    positions: [N, 3]
+    返回 (edge_index, edge_vec, edge_dist, mask)
+    """
+    n = positions.shape[0]
+    # 用 cell 偏移做最小镜像约定
+    delta = positions[:, None, :] - positions[None, :, :]
+    if cell is not None:
+        delta -= cell * np.round(delta / cell)
+    dist = np.linalg.norm(delta, axis=-1)
+
+    mask = (dist < cutoff) & (dist > 1e-6)
+    # 屏蔽自己
+    np.fill_diagonal(mask, False)
+
+    src, dst = np.nonzero(mask)
+    vec = delta[src, dst]
+    d = dist[src, dst]
+
+    # 每个节点最多保留 max_neighbors 个最近的邻居
+    if len(src) > 0:
+        order = np.lexsort((d, src))
+        src, dst, vec, d = src[order], dst[order], vec[order], d[order]
+        counts = np.bincount(src, minlength=n)
+        keep_src, keep_dst, keep_vec, keep_d = [], [], [], []
+        start = 0
+        for c in counts:
+            idx = np.arange(start, start + min(c, max_neighbors))
+            keep_src.append(src[idx]); keep_dst.append(dst[idx])
+            keep_vec.append(vec[idx]); keep_d.append(d[idx])
+            start += c
+        src = np.concatenate(keep_src); dst = np.concatenate(keep_dst)
+        vec = np.concatenate(keep_vec); d = np.concatenate(keep_d)
+
+    unit = vec / np.maximum(np.linalg.norm(vec, axis=-1, keepdims=True), 1e-9)
+    edge_index = np.stack([src, dst])
+    return edge_index, unit.astype(np.float32), d.astype(np.float32), mask
+```
+
+## 损失函数：力和能量要分开看
+
+坐标直接回归 MSE 会让模型学得很"懒"——它倾向于输出一个安全的平均值，因为坐标误差的尺度不可控。更好的做法是把力当成向量的梯度来监督，而能量作为标量辅助任务。
+
+```python
+def force_loss(pred_force, true_force, sigma=10.0):
+    """力的损失：先做归一化，否则大体系会把 loss 尺度拉爆。"""
+    scale = sigma / (np.abs(true_force).mean() + 1e-8)
+    return torch.mean((scale * (pred_force - true_force)) ** 2)
+
+
+def energy_loss(pred_energy, true_energy):
+    """能量的损失：按体系大小做归一化（每原子能量）。"""
+    return torch.mean((pred_energy - true_energy) ** 2)
+
+
+# 训练时的总损失
+loss = force_loss(out.force, batch.force) + 0.1 * energy_loss(out.energy, batch.energy)
+```
+
+我的经验是：**力的权重比能量重要一个数量级**。能量错了模型还能凑合，力量错了轨迹就完全跑偏——因为积分器会把力误差当成速度误差直接累积。
+
+## 轨迹对比比逐点误差更能说明问题
+
+逐帧 RMSE 好看不代表轨迹对。真正要看的是沿时间方向的稳定性：模型会不会在某个高势垒区域"卡住"，或者在势阱里画出奇怪的圈。
+
+```python
+import matplotlib.pyplot as plt
+
+
+def compare_trajectory(pred_traj, true_traj, atom_idx=0):
+    """pred_traj / true_traj: [T, N, 3]"""
+    t = np.arange(pred_traj.shape[0])
+    err = np.linalg.norm(pred_traj[:, atom_idx] - true_traj[:, atom_idx], axis=-1)
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot(t, err, lw=1.6, color="#b4613a")
+    ax.set_xlabel("step")
+    ax.set_ylabel("||r_pred - r_true||")
+    ax.set_title(f"atom {atom_idx} trajectory error")
+    ax.grid(alpha=0.25)
+    plt.tight_layout()
+    return fig, ax
+```
+
+## 还没解决的问题
+
+1. **长程相互作用**：cutoff 之外的相互作用现在完全丢掉了，在长程静电显著的体系里误差积累很快。
+2. **多保态**：双阱势垒那种场景，模型很容易学出"平均行为"，把两个态之间的跃迁抹平。
+3. **速度依赖**：真正的 MD 里力还依赖速度，当前实现只有位置依赖的保守力。
+
+这些都是可以继续做的方向。先把"能跑通"的部分记下来，剩下的留到下一篇。
+
+## 小结
+
+- 图天然契合分子体系，置换等变性靠度数归一化 + 方向消息来保；
+- 邻居列表必须训练/推理共用同一份代码；
+- 力的损失比能量重要得多；
+- 评价要看轨迹稳定性，而不是逐点 RMSE。
+12:["$","$1","c",{"children":[["$","$L1e",null,{"children":["$","div",null,{"className":"min-h-screen relative pb-10","children":[["$","$L1f",null,{}],["$","$L20",null,{"children":["$","div",null,{"className":"w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10","children":[["$","$L21",null,{"posts":[{"slug":"molecular-gnn","title":"把反应堆和分子塞进图里：一次分子模拟与图神经网络的联调","category":"技术","date":"2026-11-02 21:40:00","description":"用图神经网络给分子动力学加速，从邻居列表到损失函数，一条能跑通的路。","cover":"/fgrze.stack/media/img-17.webp","tags":["分子模拟","图神经网络","Python","机器学习"],"formattedDate":"2026.11.02 21:40"},{"slug":"rebuild-notes","title":"把一份 Next.js 博客复刻到 90%：做法与取舍","category":"技术","date":"2026-10-28 22:10:00","description":"从别人的开源模板出发，保留结构、重做视觉，把深色玻璃换成纸白与墨线。","cover":"/fgrze.stack/media/img-02.webp","tags":["复刻","Next.js","前端"],"formattedDate":"2026.10.28 22:10"},{"slug":"light-theme-notes","title":"浅色主题的重构：纸感、墨线与一点点黄铜","category":"设计","date":"2026-10-26 01:40:00","description":"从 Tailwind 的色板变量下手，把整套高饱和配色收成两个点缀色。","cover":"/fgrze.stack/media/img-09.webp","tags":["设计","Tailwind","配色"],"formattedDate":"2026.10.26 01:40"},{"slug":"wallpaper-carousel","title":"五张壁纸，五秒一次：背景轮播的几个细节","category":"技术","date":"2026-10-24 23:05:00","tags":["前端","CSS","动效"],"mood":"","cover":"/fgrze.stack/media/img-03.webp","description":"首页背后那五张图并不是简单的 opacity 切换，还有柔焦、遮罩与缓慢推近。","formattedDate":"2026.10.24 23:05"}],"albums":[{"id":"terra-journey","title":"泰拉大陆纪行","description":"罗德岛停靠站的落日、舰桥的午后，还有那些在雨里走过的长街","cover":"/fgrze.stack/media/img-12.webp","photoCount":12,"group":"泰拉"},{"id":"graffiti-wall","title":"涂鸦墙","description":"首页背景的那五张稿子，原图在这里","cover":"/fgrze.stack/bg/1.webp","photoCount":5,"group":"涂鸦"},{"id":"night-walk","title":"夜行记录","description":"路灯、便利店与没人的街道","cover":"/fgrze.stack/media/img-05.webp","photoCount":3,"group":"记录"},{"id":"illustration","title":"插画收藏","description":"存下来就不舍得删的那些","cover":"/fgrze.stack/media/img-09.webp","photoCount":3,"group":"收藏"},{"id":"workshop","title":"工作室","description":"画板、颜料罐和一堆画到一半的稿","cover":"/fgrze.stack/media/img-03.webp","photoCount":4,"group":"记录"}]}],["$","main",null,{"className":"flex flex-col gap-6 w-full mt-6","children":[["$","div",null,{"className":"grid grid-cols-1 lg:grid-cols-12 gap-6 w-full","children":[["$","div",null,{"className":"col-span-1 lg:col-span-7 flex flex-col","children":["$","$L22",null,{"postCount":4,"chatterCount":3,"photoCount":27}]}],["$","div",null,{"className":"col-span-1 lg:col-span-5 flex flex-col","children":["$","$L23",null,{}]}]]}],["$","div",null,{"className":"w-full mt-[-10px]","children":["$","$L24",null,{}]}],["$","div",null,{"className":"grid grid-cols-1 lg:grid-cols-12 gap-6 w-full","children":[["$","div",null,{"className":"col-span-1 lg:col-span-4 flex flex-col min-h-[300px]","children":["$","$L25",null,{"posts":[{"slug":"molecular-gnn","title":"把反应堆和分子塞进图里：一次分子模拟与图神经网络的联调","category":"技术","date":"2026-11-02 21:40:00","description":"用图神经网络给分子动力学加速，从邻居列表到损失函数，一条能跑通的路。","cover":"/fgrze.stack/media/img-17.webp","tags":"$12:props:children:0:props:children:props:children:1:props:children:props:children:0:props:posts:0:tags","content":"$26","formattedDate":"2026.11.02 21:40"},{"slug":"rebuild-notes","title":"把一份 Next.js 博客复刻到 90%：做法与取舍","category":"技术","date":"2026-10-28 22:10:00","description":"从别人的开源模板出发，保留结构、重做视觉，把深色玻璃换成纸白与墨线。","cover":"/fgrze.stack/media/img-02.webp","tags":"$12:props:children:0:props:children:props:children:1:props:children:props:children:0:props:posts:1:tags","content":"\n## 为什么要复刻\n\n看到一份做得相当完整的个人博客模板：首页是信息密度很高的卡片矩阵，配置里有网易云播放器、照片墙、说说、杂谈、友链、归档时间轴，甚至还有一个 3D 的「灵境」页面。\n\n直接拿来用当然最快，但我想要的是「像它、但不是它」——版式与交互照搬，配色与壁纸换成自己的。于是有了这次复刻。\n\n## 结构照搬，是最省力的高保真\n\n复刻的第一原则是：**能用原始结构就不要重画结构**。\n\n- 首页的 `max-w-6xl` 容器、`lg:grid-cols-12` 的十二栏切分，原样保留；\n- 文章卡、照片墙海报、说说轮播的尺寸与圆角，一个像素都没改；\n- 导航栏「向下滚动隐藏」、手机端的可拖拽圆盘菜单，全部沿用。\n\n真正动刀的只有三处：主题色板、背景处理、文案与壁纸。\n\n## 去掉「深色」，但留住「重量」\n\n原模板是深色玻璃质感：半透明深灰卡片、霓虹靛蓝点缀。换到浅色如果只是把背景刷白，会立刻垮掉——卡片失去层次，文字浮在空气里。\n\n所以做了两件事：\n\n1. **把玻璃换成纸**：卡片底色收到 `rgba(255,255,255,0.68)` 左右，保留一点透明让壁纸透出来，但足够压住底下的花纹。\n2. **把霓虹换成墨**：原来所有 `indigo-500/600` 的强调色，统一映射成近黑的墨色；白色描边改成一像素的墨线。\n\n> 浅色不是「没有重量」，重量应该来自线条和字重，而不是背景的黑。\n\n## 代价与收获\n\n代价是暗色模式变得次要了——里面还留着原来的霓虹色板，切回去依然成立，只是不再是主角。\n\n收获是：这套东西现在看起来像一本印刷品，而不是一块发光的屏幕。\n","formattedDate":"2026.10.28 22:10"},{"slug":"light-theme-notes","title":"浅色主题的重构：纸感、墨线与一点点黄铜","category":"设计","date":"2026-10-26 01:40:00","description":"从 Tailwind 的色板变量下手，把整套高饱和配色收成两个点缀色。","cover":"/fgrze.stack/media/img-09.webp","tags":"$12:props:children:0:props:children:props:children:1:props:children:props:children:0:props:posts:2:tags","content":"\n## 不要逐个组件改颜色\n\n模板里有几十个组件，写死了 `text-indigo-600`、`bg-purple-500`、`from-indigo-500` 这样的工具类。一个个改，改到一半就会漏。\n\nTailwind 4 的 `@theme` 把这些颜色变成了 CSS 变量，于是只要在根上重新定义一次，全站的颜色就跟着变了：\n\n```css\n@theme {\n  --color-indigo-400: #5b5b66;\n  --color-indigo-500: #26262e;\n  --color-indigo-600: #14141a;\n  --color-pink-500:  #a27a44;\n}\n```\n\n- `indigo` 收成墨色阶——用于标题、链接、主按钮、激活态；\n- `purple` 退成石墨灰——用于次要的数字与描述；\n- `pink` 换成黄铜——留给「照片」这类需要一点暖意的计数。\n\n## 暗色模式要能切回去\n\n变量重定义会连暗色模式一起改掉，所以再给 `html.dark` 补一层原始色板：\n\n```css\nhtml.dark {\n  --color-indigo-500: #6366f1;\n  --color-pink-500: #ec4899;\n}\n```\n\n切回夜间模式时，霓虹色原样回来，两套主题都成立。\n\n## 表面处理的三条规矩\n\n1. **卡片不能太透**。背景是有花纹的涂鸦墙，透明度低于 0.6 就会脏。\n2. **描边要细**。白色描边在浅色底上几乎没有意义，换成 `rgba(16,16,22,0.10)` 的墨线，立刻有了印刷品的骨架。\n3. **阴影要收**。深色主题靠阴影做体积，浅色主题靠阴影只会显脏，所以只留一层很浅的落影。\n\n## 最后是纸\n\n页面底色用了一个偏暖的米白 `#f6f4ee`，而不是纯白。纯白会让壁纸显得脏，米白会把壁纸里的冷色往暖里拉一点。\n","formattedDate":"2026.10.26 01:40"},{"slug":"wallpaper-carousel","title":"五张壁纸，五秒一次：背景轮播的几个细节","category":"技术","date":"2026-10-24 23:05:00","tags":"$12:props:children:0:props:children:props:children:1:props:children:props:children:0:props:posts:3:tags","mood":"","cover":"/fgrze.stack/media/img-03.webp","description":"首页背后那五张图并不是简单的 opacity 切换，还有柔焦、遮罩与缓慢推近。","content":"\n## 需求其实很少\n\n五张竖版插画，每五秒换一张，作为整站的背景。听上去就是 `setInterval` 加 `opacity` 的事。\n\n真做起来，有三个坑。\n\n## 坑一：竖图铺满横屏\n\n插画是 1080×1920 的竖图，桌面是 16:9。`background-size: cover` 会把画面放大到只露出中间一小条——人物的头被切掉一半，看起来像事故现场。\n\n最后的处理是：**不追求「看见完整的人」，而是让整面墙成为氛围**。图片做 3px 柔焦、轻微提亮，再压一层 26% 的米白纸色。涂鸦的色块还在，但不会抢卡片的注意力。\n\n## 坑二：切换时闪黑\n\n如果直接替换 `background-image`，浏览器会先清空再加载，中间闪一下底色。\n\n所以改成五层 `<img>` 堆叠，一直保持挂载，只切 `opacity`：\n\n```css\n.slide {\n  position: absolute;\n  inset: 0;\n  transition: opacity 1600ms ease-in-out;\n}\n```\n\n1600ms 比切换间隔短很多，交叉淡入淡出就显得很稳。\n\n## 坑三：静止的画面很死\n\n光淡入淡出还是「幻灯片」。给当前帧加一个 16 秒的缓慢放大，从 1.02 到 1.1，观感就活了：\n\n```css\n@keyframes kenburns {\n  0%   { transform: scale(1.02); }\n  100% { transform: scale(1.10); }\n}\n```\n\n> 关键点：动画只在「当前帧」上挂载，切换时重置，这样五张图各自有独立的呼吸节奏。\n\n## 还有一个小细节\n\n`visibility` 也要跟着切。只改 `opacity` 的话，五张全尺寸图片会同时参与合成，移动端会明显掉帧；把非相邻的帧设为 `hidden`，渲染压力立刻降下来。\n","formattedDate":"2026.10.24 23:05"}]}]}],"$L27"]}],"$L28","$L29"]}]]}]}]]}]}],["$L2a","$L2b"],"$L2c"]}]
+13:["$","$1","h",{"children":[null,["$","$L2d",null,{"children":"$L2e"}],["$","div",null,{"hidden":true,"children":["$","$L2f",null,{"children":["$","$30",null,{"name":"Next.Metadata","children":"$L31"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+15:["$","link","0",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/0tmg9vcbw.fm2.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+16:["$","link","1",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/0s1b_h0y6abo4.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+17:["$","link","2",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/046ite0-1-t.f.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","3",{"rel":"stylesheet","href":"/fgrze.stack/_next/static/chunks/04kl_3uhzp-tw.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+32:I[21793,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],""]
+33:I[62581,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+34:I[6461,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+35:I[19860,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+36:I[53832,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js"],"default"]
+37:I[64156,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"OutletBoundary"]
+27:["$","div",null,{"className":"col-span-1 lg:col-span-8 flex flex-col gap-6","children":[["$","$L32",null,{"href":"/photowall","className":"w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0","children":[["$","img",null,{"src":"/fgrze.stack/media/img-12.webp","loading":"lazy","decoding":"async","fetchPriority":"low","className":"w-full h-full absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105 opacity-90"}],["$","div",null,{"className":"absolute inset-0 bg-black/45 dark:bg-black/55 group-hover:bg-black/25 transition-colors duration-500"}],["$","div",null,{"className":"absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-6","children":[["$","h3",null,{"className":"text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 underline decoration-pink-400","children":"泰拉大陆纪行"}],["$","p",null,{"className":"text-white/90 text-sm sm:text-lg line-clamp-1","children":"罗德岛停靠站的落日、舰桥的午后，还有那些在雨里走过的长街"}]]}]]}],["$","div",null,{"className":"grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1","children":[["$","div",null,{"className":"sm:col-span-2 flex flex-col min-h-[200px]","children":["$","$L33",null,{"chatters":[{"slug":"2026-10-27-rebuild-log","title":"复刻到第七版，终于不再像别人的站了","description":"\n改到第七版的时候，才意识到问题不在颜色，而在「谁在说话」。\n\n前六版一直在做同一件事：把别人站上的深色玻璃刷成白色。结","cover":"/fgrze.stack/media/img-03.webp","date":"2026-10-27 02:20:00","formattedDate":"2026.10.27 02:20"},{"slug":"2026-10-22-type-scale","title":"把字号收窄到四档之后，页面安静了","description":"\n之前一页里能出现九种字号，每个区块都想强调自己。后来强行砍到四档：标题、小标题、正文、注脚。\n\n结果反直觉：信息层级反","cover":"/fgrze.stack/media/img-09.webp","date":"2026-10-22 23:40:00","formattedDate":"2026.10.22 23:40"},{"slug":"2026-10-18-grain","title":"那层几乎看不见的噪点","description":"\n在 body 上叠了一层 fractalNoise，透明度 3.5%，混合模式 multiply。\n\n单看是看不出什么","cover":"/fgrze.stack/media/img-05.webp","date":"2026-10-18 01:15:00","formattedDate":"2026.10.18 01:15"}]}]}],["$","div",null,{"className":"sm:col-span-1 flex flex-col min-h-[120px]","children":["$","$L34",null,{}]}]]}]]}]
+28:["$","$L35",null,{}]
+29:["$","div",null,{"className":"w-full mt-4","children":["$","$L36",null,{}]}]
+2a:["$","script","script-0",{"src":"/fgrze.stack/_next/static/chunks/0_8rr.a48vi.l.js","async":true,"nonce":"$undefined"}]
+2b:["$","script","script-1",{"src":"/fgrze.stack/_next/static/chunks/094kl8jn2m0.g.js","async":true,"nonce":"$undefined"}]
+2c:["$","$L37",null,{"children":["$","$30",null,{"name":"Next.MetadataOutlet","children":"$@38"}]}]
+2e:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+39:I[21126,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"IconMark"]
+31:[["$","title","0",{"children":"F-Grzeの光影日志"}],["$","meta","1",{"name":"description","content":"在代码与涂鸦之间往返的人。写点前端、做点视觉，把墙上的噪音整理成页面。"}],["$","link","2",{"rel":"canonical","href":"https://f-grze.github.io/fgrze.stack/"}],["$","link","3",{"rel":"alternate","type":"application/rss+xml","href":"https://f-grze.github.io/fgrze.stack/rss.xml","title":"F-Grzeの光影日志 · RSS"}],["$","meta","4",{"property":"og:title","content":"F-Grzeの光影日志"}],["$","meta","5",{"property":"og:description","content":"在代码与涂鸦之间往返的人。写点前端、做点视觉，把墙上的噪音整理成页面。"}],["$","meta","6",{"property":"og:url","content":"https://f-grze.github.io/fgrze.stack/"}],["$","meta","7",{"property":"og:site_name","content":"F-Grzeの光影日志"}],["$","meta","8",{"property":"og:locale","content":"zh_CN"}],["$","meta","9",{"property":"og:image","content":"https://f-grze.github.io/fgrze.stack/media/img-02.webp"}],["$","meta","10",{"property":"og:type","content":"website"}],["$","meta","11",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","12",{"name":"twitter:title","content":"F-Grzeの光影日志"}],["$","meta","13",{"name":"twitter:description","content":"在代码与涂鸦之间往返的人。写点前端、做点视觉，把墙上的噪音整理成页面。"}],["$","meta","14",{"name":"twitter:image","content":"https://f-grze.github.io/fgrze.stack/media/img-02.webp"}],["$","link","15",{"rel":"icon","href":"/fgrze.stack/icon.png"}],["$","link","16",{"rel":"apple-touch-icon","href":"/fgrze.stack/icon.png"}],["$","$L39","17",{}]]
+38:null

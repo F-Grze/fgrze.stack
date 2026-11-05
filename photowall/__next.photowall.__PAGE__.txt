@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[71510,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js","/fgrze.stack/_next/static/chunks/0wjsb53i55hsz.js"],"default"]
+3:I[64156,["/fgrze.stack/_next/static/chunks/0aoj38zc0nx3..js","/fgrze.stack/_next/static/chunks/0_86z927dmm45.js","/fgrze.stack/_next/static/chunks/0c6-eqlcgdk1a.js","/fgrze.stack/_next/static/chunks/0.txz1d5pglkn.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/fgrze.stack/_next/static/chunks/0wjsb53i55hsz.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"JAiKZzgkzvMpUzmMQr0QQ"}
+5:null
